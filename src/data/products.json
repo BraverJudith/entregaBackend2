@@ -1,19 +1,5 @@
 [
   {
-    "id": 1,
-    "title": "Nachito",
-    "description": "100% cashmilon",
-    "code": "ABC123",
-    "price": 100,
-    "status": true,
-    "stock": 50,
-    "category": "Categoría",
-    "thumbnails": [
-      "ruta1.jpg",
-      "ruta2.jpg"
-    ]
-  },
-  {
     "id": 2,
     "title": "Nevilan",
     "description": "Descripción del producto",
@@ -40,5 +26,16 @@
       "ruta1",
       "ruta2"
     ]
+  },
+  {
+    "title": "fdsfdsf",
+    "description": "dfgsdfds",
+    "price": 3000,
+    "code": "45821",
+    "stock": 20,
+    "category": "fdgsd",
+    "status": true,
+    "thumbnails": [],
+    "id": 4
   }
 ]
