@@ -4,7 +4,7 @@ import fs from "fs";
 import path from "path";
 
 const router = Router();
-const productsFilePath = path.resolve("./data/products.json");
+const productsFilePath = path.resolve("./src/data/products.json");
 
 const readProducts = () => {
     try {
