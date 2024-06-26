@@ -80,7 +80,6 @@ class ProductManager {
             const respuesta = await fs.readFile(this.path, "utf-8");
             const arrayProductos = JSON.parse(respuesta);
             return arrayProductos;
-            console.log(arrayProductos);
         } catch (error) {
             console.log("Error al leer un archivo", error);
             throw error;

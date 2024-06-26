@@ -35,7 +35,7 @@ const httpServer = app.listen(PUERTO, () => {
 const productManager = new ProductManager("./src/data/products.json");
 
 const io = new Server(httpServer);
-console.log(productManager);
+
 io.on("conection", async () => {
     console.log("un cliente se conecto");
     socket.emit("products", await productManager.getProducts());
