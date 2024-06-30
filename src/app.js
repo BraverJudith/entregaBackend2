@@ -26,16 +26,16 @@ app.use("/api/carts", cartsRouter);
 app.use("/api/products", productsRouter);
 app.use("/", viewsRouter);
 
-// Crear el servidor HTTP usando createServer de http
+// Crea el servidor HTTP usando createServer de http
 const httpServer = createServer(app);
 
-// Iniciar Socket.IO y pasar el servidor HTTP
+// Inicia Socket.IO y pasar el servidor HTTP
 const io = new Server(httpServer);
 
 // Instancia de ProductManager
 const productManager = new ProductManager("./src/data/products.json");
 
-// Manejar eventos de conexión
+// Maneja eventos de conexión
 io.on("connection", async (socket) => {
     console.log("Un cliente se conectó");
 
@@ -46,13 +46,13 @@ io.on("connection", async (socket) => {
         socket.on("eliminarProducto", async (id) => {
             await productManager.deleteProduct(id);
             const productosActualizados = await productManager.getProducts();
-            io.emit("products", productosActualizados); // Emitir los productos actualizados a todos los clientes
+            io.emit("products", productosActualizados); 
         });
 
         socket.on("agregarProducto", async (producto) => {
             await productManager.addProduct(producto);
             const productosActualizados = await productManager.getProducts();
-            io.emit("products", productosActualizados); // Emitir los productos actualizados a todos los clientes
+            io.emit("products", productosActualizados);
         });
     } catch (error) {
         console.error("Error al obtener productos:", error);

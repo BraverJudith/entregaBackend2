@@ -1,16 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-</head>
-<body>
-    <h1>Productos</h1>
-    <ul>
-        {{#each productos}}
-            <li>{{this.title}} - {{this.price}}</li>
-        {{/each}}
-    </ul>
-</body>
-</html>
+
+<h1>Productos</h1>
+<ul id="listaProductos">
+    {{#each productos}}
+        <li>{{this.title}} - {{this.price}}</li>
+    {{/each}}
+</ul>
+
+<script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+<script src="js/home.js"></script>       

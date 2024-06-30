@@ -23,7 +23,6 @@ const renderProducts = (data) => {
 
     data.forEach(item => {
         const card = document.createElement("div");
-        //card.classList
         card.innerHTML =`<p> ${item.id} </p>
                         <p> ${item.title} </p>
                         <p> ${item.price} </p>
@@ -55,7 +54,7 @@ const agregarProducto = () => {
     const categoria = document.getElementById("categoria").value;
     const status = document.getElementById("status").value === "true";
 
-     const nuevoProducto = {
+    const nuevoProducto = {
         title: titulo,
         description: descripcion,
         code: codigo,
