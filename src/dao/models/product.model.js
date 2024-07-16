@@ -11,5 +11,5 @@ const productSchema = new mongoose.Schema({
     thumbnails: { type: [String], default: [] }
 });
 
-const ProductModel = mongoose.model('Product', productSchema);
+const ProductModel = mongoose.model('productos', productSchema);
 export default ProductModel;

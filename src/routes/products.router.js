@@ -1,110 +1,112 @@
 import { Router } from "express";
 import ProductManagerDB from "../dao/db/product.managerdb.js";
-const productManager = new ProductManagerDB();
+import ProductModel from "../dao/models/product.model.js";
+
 
 const router = Router();
-
-const readProducts = () => {
-    try {
-        const data = fs.readFileSync(productsFilePath, "utf-8");
-        return JSON.parse(data || "[]");
-    } catch (err) {
-        console.error(`Error reading products file: ${err}`);
-        return [];
-    }
-    };
-
-const saveProducts = (products) => {
-    try {
-        fs.writeFileSync(productsFilePath, JSON.stringify(products, null, 2));
-    } catch (err) {
-        console.error(`Error saving products file: ${err}`);
-    }
-    };
+const productManagerDB = new ProductManagerDB();
 
 // Obtener todos los productos
-router.get("/", async (req, res) => {
-    try{
-        const { limit } = req.query;
-        const products = await productManager.getProducts();
-        if (limit) {
-            return res.json(products.slice(0, parseInt(limit)));
-        } else {
-            res.json(products);
-        }
-    } catch (error) {
-        console.error("Error al obtener producto", error);
-        res.status(500).json({
-            error: "Error interno del servidor"
+
+router.get('/', async (req, res) => {
+    try {
+        const { limit = 10, page = 1, sort, query } = req.query;
+        const options = {
+            limit: parseInt(limit),
+            skip: (parseInt(page) - 1) * parseInt(limit),
+            sort: sort ? { price: sort === 'asc' ? 1 : -1 } : {}
+        };
+        const filter = query ? { category: query } : {};
+
+        const products = await productManagerDB.getProducts(filter, options);
+        const totalProducts = await ProductModel.countDocuments(filter);
+        const totalPages = Math.ceil(totalProducts / limit);
+
+        res.json({
+            status: 'success',
+            payload: products,
+            totalPages,
+            prevPage: page > 1 ? page - 1 : null,
+            nextPage: page < totalPages ? page + 1 : null,
+            page: parseInt(page),
+            hasPrevPage: page > 1,
+            hasNextPage: page < totalPages,
+            prevLink: page > 1 ? `/api/products?limit=${limit}&page=${page - 1}&sort=${sort}&query=${query}` : null,
+            nextLink: page < totalPages ? `/api/products?limit=${limit}&page=${page + 1}&sort=${sort}&query=${query}` : null
         });
+    } catch (err) {
+        console.error('Error al obtener productos:', err);
+        res.status(500).json({ status: 'error', message: 'Error al obtener productos' });
     }
 });
 
 // Obtener producto por ID
-router.get("/:pid", (req, res) => {
+router.get("/:pid", async (req, res) => {
     let { pid } = req.params;
-    let products = readProducts();
-    let searchedProduct = products.find((prod) => prod.id === parseInt(pid));
-    if (!searchedProduct) {
-        return res.status(404).json({ error: "Product not found" });
-    } else {
-        res.json(searchedProduct);
+    try{
+        const product = await productManagerDB.getProductById(pid);   
+        if (!product) {
+            return res.status(404).json({ error: "Producto no encontrado" });
+        } else {
+            res.json(product);
+        }
+    } catch (error) {
+        console.error ("Error al obtener el producto", error);
+        res.status(500).json ({
+            error:"Error interno del servidor"
+        });
     }
-    });
+});
 
 // Agregar un nuevo producto
-router.post("/", (req, res) => {
-    const { title, description, code, price, status = true, stock, category, thumbnails = [] } = req.body;
+router.post("/", async (req, res) => {
+    const newProduct = req.body;
+    
+    try {
+        await productManagerDB.addProduct(newProduct);
+        res.status(201).json({
+            message: "Producto agregado con exito"
+        });
+    } catch (error) {
+        console.error("Error al agregar el producto", error);
+        res.status(500).json({
+            error:"Error interno del servidor"
+        });
+    }  
+});
 
-    if (!title || !description || !code || !price || !stock || !category) {
-        return res.status(400).json({ error: "All fields except thumbnails are required" });
-    }
-    const products = readProducts();
-    const id = products.length > 0 ? products[products.length - 1].id + 1 : 1;
-    const newProduct = {
-        id: id,
-        title,
-        description,
-        code,
-        price,
-        status,
-        stock,
-        category,
-        thumbnails,
-    };
-    products.push(newProduct);
-    saveProducts(products);
-    res.status(201).json(newProduct);
-    });
-
-// Actualizar un producto
-router.put("/:pid", (req, res) => {
+// Actualizar un producto por ID
+router.put("/:pid", async (req, res) => {
     const { pid } = req.params;
-    const { title, description, code, price, status, stock, category, thumbnails } = req.body;
-    const products = readProducts();
-    const index = products.findIndex((p) => p.id === parseInt(pid));
-
-    if (index === -1) {
-        return res.status(404).json({ error: "Product not found" });
+    const productoActualizado = req.body;
+    try {
+        await productManagerDB.updateProduct(pid,productoActualizado)
+        res.json({
+            message: "Producto actualizado exitosamente"
+        });
+    } catch (error) {
+        console.error("Error al actualizar el producto", error);
+        res.status(500).json({
+            error:"Error interno del servidor"
+        });
     }
-
-    const updatedProduct = { ...products[index], title, description, code, price, status, stock, category, thumbnails };
-    products[index] = updatedProduct;
-    saveProducts(products);
-    res.json(updatedProduct);
-    });
+});
 
 // Eliminar un producto
-router.delete("/:pid", (req, res) => {
+router.delete("/:pid", async (req, res) => {
     const { pid } = req.params;
-    const products = readProducts();
-    const productIndex = products.findIndex((p) => p.id === parseInt(pid));
-    if (productIndex === -1) {
-        return res.status(404).json({ error: "Product not found" });
+
+    try{
+        await productManagerDB.deleteProduct(pid);
+        res.status(201).json({
+            message: "Producto eliminado con exito"
+        });
+    } catch (error) {
+        console.error("Error al eliminar el producto", error);
+        res.status(500).json({
+            error:"Error interno del servidor"
+        });
     }
-    products.splice(productIndex, 1);
-    saveProducts(products);
-    res.status(204).send();
-    });
+});
 
 export default router;

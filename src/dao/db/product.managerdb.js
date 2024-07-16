@@ -56,7 +56,7 @@ class ProductManagerDB {
                 return null;
             } else {
                 console.log("Producto encontrado");
-                return buscado;
+                return searched;
             }
         } catch (error) {
             console.log("Error al buscar producto por ID", error);
@@ -84,7 +84,7 @@ class ProductManagerDB {
 
     async deleteProduct(id) {
         try {
-            deletedProduct = await ProductModel.findByIdAndDelete(id);
+            const deletedProduct = await ProductModel.findByIdAndDelete(id);
             if(!deletedProduct) {
                 console.log("No se encuentra el producto a eliminar");
                 return null;
