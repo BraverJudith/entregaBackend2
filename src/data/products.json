@@ -1,41 +1,272 @@
 [
   {
-    "id": 2,
-    "title": "Nevilan",
-    "description": "Descripción del producto",
-    "code": "12345",
-    "price": 100,
-    "status": true,
-    "stock": 50,
-    "category": "Categoría",
-    "thumbnails": [
-      "ruta1",
-      "ruta2"
-    ]
+      "title": "Acrilux",
+      "description": "Hilo de alta calidad perfecto para proyectos de primavera y verano.",
+      "code": "ACRILUX01",
+      "price": 12.99,
+      "status": true,
+      "stock": 100,
+      "category": "Primavera - Verano",
+      "thumbnails": ["https://example.com/images/acrilux1.jpg"]
   },
   {
-    "id": 3,
-    "title": "Nlana",
-    "description": "Descripción del producto",
-    "code": "123645",
-    "price": 100,
-    "status": true,
-    "stock": 50,
-    "category": "Categoría",
-    "thumbnails": [
-      "ruta1",
-      "ruta2"
-    ]
+      "title": "Algodón 8/3",
+      "description": "Hilo de algodón suave y resistente para prendas ligeras.",
+      "code": "ALG83",
+      "price": 15.50,
+      "status": true,
+      "stock": 80,
+      "category": "Primavera - Verano",
+      "thumbnails": ["https://example.com/images/algodon83.jpg"]
   },
   {
-    "title": "fdsfdsf",
-    "description": "dfgsdfds",
-    "price": 3000,
-    "code": "45821",
-    "stock": 20,
-    "category": "fdgsd",
+      "title": "Algodón 8/6",
+      "description": "Hilo de algodón más grueso para proyectos duraderos.",
+      "code": "ALG86",
+      "price": 17.00,
+      "status": true,
+      "stock": 70,
+      "category": "Primavera - Verano",
+      "thumbnails": ["https://example.com/images/algodon86.jpg"]
+  },
+  {
+      "title": "Algodón Estampado",
+      "description": "Hilo de algodón con estampados únicos y coloridos.",
+      "code": "ALGESTAMP",
+      "price": 18.50,
+      "status": true,
+      "stock": 60,
+      "category": "Primavera - Verano",
+      "thumbnails": ["https://example.com/images/algodonestampado.jpg"]
+  },
+  {
+      "title": "Atenas",
+      "description": "Hilo versátil para una amplia variedad de proyectos.",
+      "code": "ATENAS01",
+      "price": 14.99,
+      "status": true,
+      "stock": 90,
+      "category": "Primavera - Verano",
+      "thumbnails": ["https://example.com/images/atenas.jpg"]
+  },
+  {
+      "title": "Elastizado",
+      "description": "Hilo elástico para proyectos que requieren flexibilidad.",
+      "code": "ELAST01",
+      "price": 16.00,
+      "status": true,
+      "stock": 50,
+      "category": "Primavera - Verano",
+      "thumbnails": ["https://example.com/images/elastizado.jpg"]
+  },
+  {
+      "title": "Fidelio",
+      "description": "Hilo duradero y resistente, ideal para proyectos exigentes.",
+      "code": "FIDELIO01",
+      "price": 19.99,
+      "status": true,
+      "stock": 30,
+      "category": "Primavera - Verano",
+      "thumbnails": ["https://example.com/images/fidelio.jpg"]
+  },
+  {
+      "title": "Jor-Franc",
+      "description": "Hilo suave y cómodo para prendas de uso diario.",
+      "code": "JORFRANC01",
+      "price": 13.50,
+      "status": true,
+      "stock": 75,
+      "category": "Primavera - Verano",
+      "thumbnails": ["https://example.com/images/jorfranc.jpg"]
+  },
+  {
+      "title": "Jor-Franc Estampado",
+      "description": "Versión estampada del popular Jor-Franc.",
+      "code": "JORFRANCESTAMP",
+      "price": 14.50,
+      "status": true,
+      "stock": 65,
+      "category": "Primavera - Verano",
+      "thumbnails": ["https://example.com/images/jorfrancestampado.jpg"]
+  },
+  {
+      "title": "Luna",
+      "description": "Hilo brillante y sedoso, ideal para prendas nocturnas.",
+      "code": "LUNA01",
+      "price": 20.00,
+      "status": true,
+      "stock": 40,
+      "category": "Primavera - Verano",
+      "thumbnails": ["https://example.com/images/luna.jpg"]
+  },
+  {
+    "title": "Acrilblue",
+    "description": "Lana acrílica suave ideal para prendas de invierno.",
+    "code": "ACRILBLUE001",
+    "price": 10.50,
     "status": true,
-    "thumbnails": [],
-    "id": 4
-  }
+    "stock": 100,
+    "category": "Otoño - Invierno",
+    "thumbnails": ["https://www.hiladoslho.com.ar/images/acrilblue1.jpg"]
+  },
+  {
+    "title": "Acrilblue",
+    "description": "Lana acrílica 100% de alta calidad, ideal para todo tipo de prendas.",
+    "code": "ACRIL001",
+    "price": 8.99,
+    "status": true,
+    "stock": 100,
+    "category": "Acrílico",
+    "thumbnails": ["https://www.hiladoslho.com.ar/images/acrilblue.jpg"]
+},
+{
+    "title": "Amalfil",
+    "description": "Lana suave y duradera, perfecta para proyectos de tejido.",
+    "code": "AMAL002",
+    "price": 9.50,
+    "status": true,
+    "stock": 80,
+    "category": "Lana Mixta",
+    "thumbnails": ["https://www.hiladoslho.com.ar/images/amalfil.jpg"]
+},
+{
+    "title": "Angorina",
+    "description": "Lana esponjosa y ligera, ideal para prendas de invierno.",
+    "code": "ANGO003",
+    "price": 12.00,
+    "status": true,
+    "stock": 50,
+    "category": "Lana Natural",
+    "thumbnails": ["https://www.hiladoslho.com.ar/images/angorina.jpg"]
+},
+{
+    "title": "Atenas",
+    "description": "Lana acrílica de alta resistencia, perfecta para mantas y suéteres.",
+    "code": "ATEN004",
+    "price": 7.99,
+    "status": true,
+    "stock": 120,
+    "category": "Acrílico",
+    "thumbnails": ["https://www.hiladoslho.com.ar/images/atenas.jpg"]
+},
+{
+    "title": "Bariloche",
+    "description": "Lana gruesa y cálida, ideal para proyectos grandes.",
+    "code": "BARI005",
+    "price": 11.50,
+    "status": true,
+    "stock": 70,
+    "category": "Acrílico",
+    "thumbnails": ["https://www.hiladoslho.com.ar/images/bariloche.jpg"]
+},
+{
+    "title": "BB 2/10",
+    "description": "Lana especial para bebés, muy suave y cómoda.",
+    "code": "BB21006",
+    "price": 10.99,
+    "status": true,
+    "stock": 90,
+    "category": "Lana para Bebés",
+    "thumbnails": ["https://www.hiladoslho.com.ar/images/bb210.jpg"]
+},
+{
+    "title": "Brilho",
+    "description": "Lana con brillo, perfecta para proyectos elegantes y llamativos.",
+    "code": "BRIL007",
+    "price": 13.00,
+    "status": true,
+    "stock": 60,
+    "category": "Lana Brillante",
+    "thumbnails": ["https://www.hiladoslho.com.ar/images/brilho.jpg"]
+},
+{
+    "title": "Cash LHO",
+    "description": "Lana de cachemira, extremadamente suave y lujosa.",
+    "code": "CASH008",
+    "price": 25.00,
+    "status": true,
+    "stock": 30,
+    "category": "Cachemira",
+    "thumbnails": ["https://www.hiladoslho.com.ar/images/cashlho.jpg"]
+},
+{
+    "title": "Chenille",
+    "description": "Lana chenille, muy suave y esponjosa.",
+    "code": "CHEN009",
+    "price": 14.00,
+    "status": true,
+    "stock": 40,
+    "category": "Chenille",
+    "thumbnails": ["https://www.hiladoslho.com.ar/images/chenille.jpg"]
+},
+{
+    "title": "Corderito",
+    "description": "Lana gruesa y cálida, ideal para mantas y abrigos.",
+    "code": "CORD010",
+    "price": 15.00,
+    "status": true,
+    "stock": 50,
+    "category": "Lana Gruesa",
+    "thumbnails": ["https://www.hiladoslho.com.ar/images/corderito.jpg"]
+},
+{
+    "title": "Del Sur",
+    "description": "Lana de alta calidad, ideal para prendas suaves y cómodas.",
+    "code": "DELSUR011",
+    "price": 9.99,
+    "status": true,
+    "stock": 80,
+    "category": "Lana Mixta",
+    "thumbnails": ["https://www.hiladoslho.com.ar/images/delsur.jpg"]
+},
+{
+    "title": "Fidelio",
+    "description": "Lana resistente y duradera, perfecta para prendas de uso diario.",
+    "code": "FIDEL012",
+    "price": 8.50,
+    "status": true,
+    "stock": 90,
+    "category": "Acrílico",
+    "thumbnails": ["https://www.hiladoslho.com.ar/images/fidelio.jpg"]
+},
+{
+    "title": "Harmonia",
+    "description": "Lana suave y sedosa, ideal para prendas delicadas.",
+    "code": "HARM013",
+    "price": 11.00,
+    "status": true,
+    "stock": 70,
+    "category": "Lana Natural",
+    "thumbnails": ["https://www.hiladoslho.com.ar/images/harmonia.jpg"]
+},
+{
+    "title": "Harmonia Lux",
+    "description": "Versión lujosa de la lana Harmonia, más suave y brillante.",
+    "code": "HARMLUX014",
+    "price": 13.50,
+    "status": true,
+    "stock": 60,
+    "category": "Lana Brillante",
+    "thumbnails": ["https://www.hiladoslho.com.ar/images/harmonia_lux.jpg"]
+},
+{
+    "title": "Kali",
+    "description": "Lana versátil, ideal para una variedad de proyectos de tejido.",
+    "code": "KALI015",
+    "price": 7.50,
+    "status": true,
+    "stock": 100,
+    "category": "Acrílico",
+    "thumbnails": ["https://www.hiladoslho.com.ar/images/kali.jpg"]
+},
+{
+    "title": "Maglia",
+    "description": "Lana gruesa, ideal para proyectos rápidos y cálidos.",
+    "code": "MAGLIA016",
+    "price": 10.00,
+    "status": true,
+    "stock": 80,
+    "category": "Lana Gruesa",
+    "thumbnails": ["https://www.hiladoslho.com.ar/images/maglia.jpg"]
+}
 ]

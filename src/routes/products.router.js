@@ -1,10 +1,8 @@
-import express from "express";
 import { Router } from "express";
-import fs from "fs";
-import path from "path";
+import ProductManagerDB from "../dao/db/product.managerdb.js";
+const productManager = new ProductManagerDB();
 
 const router = Router();
-const productsFilePath = path.resolve("./src/data/products.json");
 
 const readProducts = () => {
     try {
@@ -25,14 +23,22 @@ const saveProducts = (products) => {
     };
 
 // Obtener todos los productos
-router.get("/", (req, res) => {
-    const { limit } = req.query;
-    const products = readProducts();
-    if (limit) {
-        return res.json(products.slice(0, parseInt(limit)));
+router.get("/", async (req, res) => {
+    try{
+        const { limit } = req.query;
+        const products = await productManager.getProducts();
+        if (limit) {
+            return res.json(products.slice(0, parseInt(limit)));
+        } else {
+            res.json(products);
+        }
+    } catch (error) {
+        console.error("Error al obtener producto", error);
+        res.status(500).json({
+            error: "Error interno del servidor"
+        });
     }
-    res.json(products);
-    });
+});
 
 // Obtener producto por ID
 router.get("/:pid", (req, res) => {

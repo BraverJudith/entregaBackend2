@@ -5,8 +5,8 @@ import { Server } from "socket.io";
 import productsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
 import viewsRouter from "./routes/views.router.js";
-import ProductManager from "./controllers/productManager.js";
-
+import ProductManager from "./dao/fs/productManager.js";
+import  "./database.js";
 const PUERTO = 8080;
 
 const app = express(); 
