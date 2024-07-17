@@ -34,7 +34,7 @@ const renderProducts = (data) => {
             eliminarProducto(item.id);
         })
     });
-};
+}
 const eliminarProducto = (id) => {
     socket.emit("eliminarProducto",id);
 }

@@ -11,29 +11,26 @@ const productManagerDB = new ProductManagerDB();
 router.get('/', async (req, res) => {
     try {
         const { limit = 10, page = 1, sort, query } = req.query;
-        const options = {
+        const productos = await productManagerDB.getProducts({
             limit: parseInt(limit),
-            skip: (parseInt(page) - 1) * parseInt(limit),
-            sort: sort ? { price: sort === 'asc' ? 1 : -1 } : {}
-        };
-        const filter = query ? { category: query } : {};
-
-        const products = await productManagerDB.getProducts(filter, options);
-        const totalProducts = await ProductModel.countDocuments(filter);
-        const totalPages = Math.ceil(totalProducts / limit);
+            page: parseInt(page),
+            sort,
+            query,
+        });
 
         res.json({
             status: 'success',
-            payload: products,
-            totalPages,
-            prevPage: page > 1 ? page - 1 : null,
-            nextPage: page < totalPages ? page + 1 : null,
-            page: parseInt(page),
-            hasPrevPage: page > 1,
-            hasNextPage: page < totalPages,
-            prevLink: page > 1 ? `/api/products?limit=${limit}&page=${page - 1}&sort=${sort}&query=${query}` : null,
-            nextLink: page < totalPages ? `/api/products?limit=${limit}&page=${page + 1}&sort=${sort}&query=${query}` : null
+            payload: productos,
+            totalPages: productos.totalPages,
+            prevPage: productos.prevPage,
+            nextPage: productos.nextPage,
+            page: productos.page,
+            hasPrevPage: productos.hasPrevPage,
+            hasNextPage: productos.hasNextPage,
+            prevLink: productos.hasPrevPage ? `/api/products?limit=${limit}&page=${productos.prevPage}&sort=${sort}&query=${query}` : null,
+            nextLink: productos.hasNextPage ? `/api/products?limit=${limit}&page=${productos.nextPage}&sort=${sort}&query=${query}` : null,
         });
+
     } catch (err) {
         console.error('Error al obtener productos:', err);
         res.status(500).json({ status: 'error', message: 'Error al obtener productos' });

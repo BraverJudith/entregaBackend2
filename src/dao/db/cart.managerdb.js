@@ -17,8 +17,7 @@ class CartManager {
 
     async getCarritoById(cartId) {
         try {
-            const carrito = await CartModel.findById(cartId);
-
+            const carrito = await CartModel.findById(cartId).populate('products.product');
             if (!carrito) {
                 throw new Error(`No existe un carrito con el id ${cartId}`);
             }
@@ -28,8 +27,9 @@ class CartManager {
             throw error;
         }
     }
+    
 
-    async agregarProductoAlCarrito(cartId, productId, quantity = 1) {
+    async agregarProductoAlCarrito(cartId, productId, quantity) {
         try {
             const carrito = await this.getCarritoById(cartId);
             const productExist = carrito.products.find(p => p.product.toString() === productId);

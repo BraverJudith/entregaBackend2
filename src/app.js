@@ -14,8 +14,8 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static("./src/public"));
+app.use(express.static("/public"));
+app.use(express.static('public'));
 
 // Express-Handlebars
 app.engine("handlebars", engine());
