@@ -1,10 +1,11 @@
-<h1>Carrito</h1>
-<ul id="listaCarrito">
-    {{#each cart.products}}
-        <li>{{this.product.title}} - {{this.quantity}}</li>
-    {{/each}}
-</ul>
-<a href="/">Volver</a>
+    <div class="carritoContainer">
+        <h1>Carrito</h1>
+        <ul id="listaCarrito">
+            {{#each cart.products}}
+                <li>{{this.product.title}} - {{this.quantity}}</li>
+            {{/each}}
+                <a href="/">Volver</a>
+        </ul>
+    </div>
 
-<script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
-<script src="js/cart.js"></script>
+

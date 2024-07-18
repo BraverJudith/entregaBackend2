@@ -1,25 +1,31 @@
+<div class="containerProducts">
+    <h1>Productos</h1>
+    <div id="listaProductos">
+        {{#each productos}}
+            <div>
+                <h2>{{title}}</h2>
+                <p>{{_id}}</p>
+                <p>{{description}}</p>
+                <p>Precio: ${{price}}</p>
+                <p>Categoría: {{category}}</p>
+                <button> Ver producto</button>
+                <form action="/api/carts/add" method="POST">
+                    <input type="hidden" name="productId" value="{{_id}}">
+                    <button type="submit">Agregar al carrito</button>
+                </form>
+            </div>
+        {{/each}}
+    </div>
+</div>
+<div class="paginas">
+        {{#if hasPrevPage}}
+            <a href="{{prevLink}}">Anterior</a>
+        {{/if}}
 
-<h1>Productos</h1>
-    {{#each productos}}
-        <div id="listaProductos">
-            <h2>{{title}}</h2>
-            <p> {{_id}} </p>
-            <p>{{description}}</p>
-            <p>Price: ${{price}}</p>
-            <p>Category: {{category}} </p>
-            <button onclick="addToCart('{{_id}}')">Agregar al carrito</button>
-        </div>
-    {{/each}}
-<div>
-    {{#if hasPrevPage}}
-        <a href="{{prevLink}}">Página anterior</a>
-    {{/if}}
-    <span>Página {{page}} de {{totalPages}}</span>
-    {{#if hasNextPage}}
-        <a href="{{nextLink}}">Página siguiente</a>
-    {{/if}}
+        {{#if hasNextPage}}
+            <a href="{{nextLink}}">Siguiente</a>
+        {{/if}}
+
+    <p>Página {{currentPage}} de {{totalPages}}</p>
 </div>
 
-<script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script> 
-<script src="/js/home.js"></script> 
-<link rel="stylesheet" href="../public/css/style.css">

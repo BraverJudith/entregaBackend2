@@ -15,6 +15,16 @@ class CartManager {
         }
     }
 
+    async obtenerCarrito() {
+        try {
+            const carts = await CartModel.find();
+            return carts;
+        } catch (error) {
+            console.error("Error al listar los carritos.!");
+        }
+    }
+
+
     async getCarritoById(cartId) {
         try {
             const carrito = await CartModel.findById(cartId).populate('products.product');

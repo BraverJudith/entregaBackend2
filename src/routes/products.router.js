@@ -10,25 +10,33 @@ const productManagerDB = new ProductManagerDB();
 
 router.get('/', async (req, res) => {
     try {
-        const { limit = 10, page = 1, sort, query } = req.query;
-        const productos = await productManagerDB.getProducts({
-            limit: parseInt(limit),
-            page: parseInt(page),
-            sort,
-            query,
-        });
+        const { limit = 10, page = 1, sort = 'asc', query = '' } = req.query;
+
+        // Configura el ordenamiento basado en el parámetro `sort`
+        const sortOption = sort === 'desc' ? { price: -1 } : { price: 1 };
+
+        const productos = await productManagerDB.getProducts(
+            {}, // Filtro si es necesario
+            {
+                limit: parseInt(limit, 10),
+                page: parseInt(page, 10),
+                sort: sortOption,
+                query: query
+            }
+        );
 
         res.json({
-            status: 'success',
-            payload: productos,
+            payload: productos.docs,
             totalPages: productos.totalPages,
             prevPage: productos.prevPage,
             nextPage: productos.nextPage,
             page: productos.page,
             hasPrevPage: productos.hasPrevPage,
             hasNextPage: productos.hasNextPage,
-            prevLink: productos.hasPrevPage ? `/api/products?limit=${limit}&page=${productos.prevPage}&sort=${sort}&query=${query}` : null,
-            nextLink: productos.hasNextPage ? `/api/products?limit=${limit}&page=${productos.nextPage}&sort=${sort}&query=${query}` : null,
+            prevLink: productos.hasPrevPage ? `/api/products?page=${productos.prevPage}&limit=${limit}&sort=${sort}&query=${query}` : null,
+            nextLink: productos.hasNextPage ? `/api/products?page=${productos.nextPage}&limit=${limit}&sort=${sort}&query=${query}` : null,
+            isAsc: sort === 'asc',
+            isDesc: sort === 'desc'
         });
 
     } catch (err) {
@@ -36,6 +44,9 @@ router.get('/', async (req, res) => {
         res.status(500).json({ status: 'error', message: 'Error al obtener productos' });
     }
 });
+
+
+
 
 // Obtener producto por ID
 router.get("/:pid", async (req, res) => {
