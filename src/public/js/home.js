@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p>${producto.description}</p>
                 <p>Precio: $${producto.price}</p>
                 <p>Categoría: ${producto.category}</p>
-                <button> Ver producto</button>
+                <a  href="/api/products/${producto._id}">Ver producto</a>
                 <form action="/api/carts/add" method="POST">
                     <button type="submit">Agregar al carrito</button>
                 </form>

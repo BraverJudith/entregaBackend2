@@ -49,14 +49,15 @@ router.get('/', async (req, res) => {
 
 
 // Obtener producto por ID
-router.get("/:pid", async (req, res) => {
-    let { pid } = req.params;
+router.get("/:pid", async (req, res) => { 
+    const { pid } = req.params;
+    console.log('Product ID:', pid); 
     try{
         const product = await productManagerDB.getProductById(pid);   
         if (!product) {
             return res.status(404).json({ error: "Producto no encontrado" });
         } else {
-            res.json(product);
+            res.render('productDetail', { product });
         }
     } catch (error) {
         console.error ("Error al obtener el producto", error);

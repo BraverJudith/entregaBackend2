@@ -43,6 +43,9 @@ router.get('/home', async (req, res) => {
                 sort: sortOption
             }
         );
+        const prevLink = productos.hasPrevPage ? `/home?page=${productos.prevPage}&limit=${limit}&sort=${sort}&query=${query}&category=${category}&availability=${availability}` : null;
+        const nextLink = productos.hasNextPage ? `/home?page=${productos.nextPage}&limit=${limit}&sort=${sort}&query=${query}&category=${category}&availability=${availability}` : null;
+
         res.render('home', {
             productos: productos.docs,
             totalPages: productos.totalPages,
@@ -51,9 +54,10 @@ router.get('/home', async (req, res) => {
             currentPage: productos.page,
             hasPrevPage: productos.hasPrevPage,
             hasNextPage: productos.hasNextPage,
-            prevLink: productos.hasPrevPage ? `/home?page=${productos.prevPage}&limit=${limit}&sort=${sort}&query=${query}&category=${category}&availability=${availability}` : null,
-            nextLink: productos.hasNextPage ? `/home?page=${productos.nextPage}&limit=${limit}&sort=${sort}&query=${query}&category=${category}&availability=${availability}` : null
+            prevLink: prevLink,
+            nextLink: nextLink
         });
+
 
 
     } catch (err) {

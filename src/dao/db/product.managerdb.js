@@ -55,7 +55,7 @@ class ProductManagerDB {
 
     async getProductById(id) {
         try {
-            const searched = await ProductModel.findById(id);
+            const searched = await ProductModel.findById(id).lean();
             if (!searched) {
                 console.log("Producto no encontrado");
                 return null;

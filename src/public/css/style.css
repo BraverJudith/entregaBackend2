@@ -54,7 +54,7 @@ h2 {
 }
 
 
-button {
+#listaProductos button {
     background: rgb(64, 133, 224);
     color: #fff;
     border: none;
@@ -66,6 +66,35 @@ button {
     transition: background 0.3s;
     display: inline-block;
     margin-top: 10px; 
+}
+
+#listaProductos a {
+    background: rgb(64, 133, 224);
+    color: #fff;
+    border: none;
+    height: 45px;
+    padding: 10px 20px; 
+    margin: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+    display: inline-block;
+    margin-top: 10px; 
+}
+
+.button-link {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: blue;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.button-link:hover {
+    background-color: darkblue;
 }
 
 #listaProductos button:hover {
