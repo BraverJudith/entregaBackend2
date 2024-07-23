@@ -9,10 +9,11 @@
                 <p>Precio: ${{price}}</p>
                 <p>Categoría: {{category}}</p>
                 <a class="button" href="/api/products/{{_id}}">Ver producto</a>
-                <form action="/api/carts/add" method="POST">
+                <form action="/api/carts/add/{{_id}}" method="POST">
                     <input type="hidden" name="productId" value="{{_id}}">
                     <button type="submit">Agregar al carrito</button>
                 </form>
+                <button onclick="addToCart('{{_id}}')">Agregar al Carrito</button>
             </div>
         {{/each}}
     </div>

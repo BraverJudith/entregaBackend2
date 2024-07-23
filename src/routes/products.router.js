@@ -12,11 +12,11 @@ router.get('/', async (req, res) => {
     try {
         const { limit = 10, page = 1, sort = 'asc', query = '' } = req.query;
 
-        // Configura el ordenamiento basado en el parámetro `sort`
+        
         const sortOption = sort === 'desc' ? { price: -1 } : { price: 1 };
 
         const productos = await productManagerDB.getProducts(
-            {}, // Filtro si es necesario
+            {}, 
             {
                 limit: parseInt(limit, 10),
                 page: parseInt(page, 10),
@@ -51,7 +51,6 @@ router.get('/', async (req, res) => {
 // Obtener producto por ID
 router.get("/:pid", async (req, res) => { 
     const { pid } = req.params;
-    console.log('Product ID:', pid); 
     try{
         const product = await productManagerDB.getProductById(pid);   
         if (!product) {

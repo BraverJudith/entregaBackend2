@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p>Precio: $${producto.price}</p>
                 <p>Categoría: ${producto.category}</p>
                 <a  href="/api/products/${producto._id}">Ver producto</a>
-                <form action="/api/carts/add" method="POST">
+                <form action="/api/carts/add/${producto._id}" method="POST">
                     <button type="submit">Agregar al carrito</button>
                 </form>
             `;
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    const btnAgregarProducto = document.getElementById("agregar");
+    /*const btnAgregarProducto = document.getElementById("agregar");
     if (btnAgregarProducto) {
         btnAgregarProducto.addEventListener("click", () => {
             agregarProducto();
@@ -61,5 +61,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
         socket.emit("agregarProducto", nuevoProducto);
         document.getElementById("formularioAgregarProducto").reset();
-    };
+    };*/
 });

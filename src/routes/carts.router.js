@@ -78,25 +78,30 @@ router.put('/:cid', async (req, res) => {
     }
 });
 
-
-router.post('/add', async (req, res) => {
+// funcion para agregar producto al carrito desde el boton agregar producto 
+//-- no escuche que no habia que hacerlo por por eso no funciona bien hice lo que pude porque me faltan datos.
+router.post('/add/:pid', async (req, res) => {
+    const { productId } = req.params;
     try {
-        console.log('Datos recibidos:', req.body); 
-        const { productId } = req.body;
-
         if (!productId) {
             return res.status(400).json({ success: false, error: 'Falta el ID del producto' });
         }
 
-        // Buscar o crear el carrito
-        let cart = await CartModel.findOne();
-
-        if (!cart) {
+        // Obtener todos los carritos
+        let carts = await CartModel.find();
+        
+        // Seleccionar el último carrito
+        let cart;
+        if (carts.length === 0) {
+            // Si no hay carritos, crear uno nuevo
             cart = new CartModel();
+        } else {
+            // Seleccionar el último carrito
+            cart = carts[carts.length - 1];
         }
 
         // Verificar si el producto ya está en el carrito
-        const productIndex = cart.products.findIndex(p => p.productId.toString() === productId);
+        const productIndex = cart.products.findIndex(p => p.product.toString() === productId);
 
         if (productIndex !== -1) {
             // Si el producto ya está, aumentar la cantidad

@@ -39,6 +39,12 @@ class ProductManagerDB {
     async getProducts(filter = {}, options = {}) {
         try {
             const { page = 1, limit = 10, sort = {} } = options;
+            
+            const queryFilter = {};
+            if (options.query) {
+                queryFilter.category = options.query; // Asumiendo que `query` filtra por categoría
+            }
+            
             const arrayProductos = await ProductModel.paginate(filter, {
                 page: parseInt(page, 10),
                 limit: parseInt(limit, 10),
