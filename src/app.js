@@ -1,4 +1,7 @@
 import express from "express";
+import session from "express-session";
+import __dirname from './utils.js';
+import path from 'path';
 import { engine } from "express-handlebars";
 import { createServer } from "http";
 import { Server } from "socket.io";
@@ -6,22 +9,27 @@ import productsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
 import viewsRouter from "./routes/views.router.js";
 import ProductManager from "./dao/fs/productManager.js";
-import "./database.js";
 import ProductModel from "./dao/models/product.model.js";
+import "./database.js";
+import { config } from "./config/config.js";
 
-const PUERTO = 8080;
 const app = express(); 
 
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("./src/public"));
+app.use(session({
+    secret:config.SECRET_SESSION,
+    resave: true, 
+    saveUninitialized: true,
+}));
 
 
 // Express-Handlebars
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
-app.set("views", "./src/views");
+app.set('views', path.join(__dirname,'/views'));
 
 // Rutas
 app.use("/api/carts", cartsRouter);
@@ -75,7 +83,7 @@ io.on("connection", async (socket) => {
 });
 
 // Escuchar el puerto
-httpServer.listen(PUERTO, () => {
-    console.log(`Escuchando en el puerto: ${PUERTO}`);
+httpServer.listen(config.PORT, () => {
+    console.log(`Escuchando en el puerto: ${config.PORT}`);
     app.use("/", viewsRouter);
 });
