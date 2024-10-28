@@ -8,10 +8,6 @@ router.get("/", async (req, res) => {
     res.redirect("/home");
 });
 
-router.get("/", async (req, res) => {
-    res.redirect("/home");
-});
-
 router.get ("/realtimeproducts", async (req,res) => {
     res.render("realtimeproducts");
 });
@@ -58,8 +54,6 @@ router.get('/home', async (req, res) => {
             nextLink: nextLink
         });
 
-
-
     } catch (err) {
         console.error('Error al obtener productos:', err);
         res.status(500).json({
@@ -69,6 +63,9 @@ router.get('/home', async (req, res) => {
     }
 });
 
+router.get('/login', async(req,res) => {
+    res.render('login');
+})
         
 router.get ("/carts/:cid", async (req, res) =>{
     const cartId = req.params.cid;

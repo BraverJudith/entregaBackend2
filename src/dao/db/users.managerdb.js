@@ -1,13 +1,13 @@
-import { usersModel } from "./models/users.model.js";
+import { usersModel } from "../models/users.model.js";
 
 export class UsersManagerDB{
 
-    static async create(usuario){
+    static async createUser(usuario ={}){
         let newUser=await usersModel.create(usuario)
         return newUser.toJSON()
     }
 
-    static async getBy(filtro){
+    static async getUserBy(filtro={}){
         return await usersModel.findOne(filtro).lean()
     }
 

@@ -1,9 +1,23 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
+import { createHash } from '../../utils.js'; 
+const userSchema = new mongoose.Schema({
+    first_name: String,
+    last_name: String,
+    email: { type: String, unique: true },
+    age: Number,
+    password: String, 
+    cart: { type: mongoose.Schema.Types.ObjectId, ref: 'Carts' },
+    role: { type: String, default: 'user' } 
+});
 
-export const usersModel = mongoose.model('usuarios',new mongoose.Schema({
-    nombre: String,
-    email:{
-        type: String, unique:true
-    }, 
-    password: String
-}));
+// Middleware para hash de contraseña
+userSchema.pre('save', function (next) {
+    if (!this.isModified('password')) return next();
+    this.password = createHash(this.password, 10);
+    next();
+});
+
+export const usersModel = mongoose.model('usuarios', userSchema);
+
+
+

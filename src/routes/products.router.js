@@ -1,6 +1,7 @@
 import { Router } from "express";
 import ProductManagerDB from "../dao/db/product.managerdb.js";
 import ProductModel from "../dao/models/product.model.js";
+import { procesaErrores } from "../utils.js";
 
 
 const router = Router();
@@ -11,8 +12,6 @@ const productManagerDB = new ProductManagerDB();
 router.get('/', async (req, res) => {
     try {
         const { limit = 10, page = 1, sort = 'asc', query = '' } = req.query;
-
-        
         const sortOption = sort === 'desc' ? { price: -1 } : { price: 1 };
 
         const productos = await productManagerDB.getProducts(
@@ -39,9 +38,8 @@ router.get('/', async (req, res) => {
             isDesc: sort === 'desc'
         });
 
-    } catch (err) {
-        console.error('Error al obtener productos:', err);
-        res.status(500).json({ status: 'error', message: 'Error al obtener productos' });
+    } catch (error) {
+        procesaErrores(res,error);
     }
 });
 
@@ -59,10 +57,7 @@ router.get("/:pid", async (req, res) => {
             res.render('productDetail', { product });
         }
     } catch (error) {
-        console.error ("Error al obtener el producto", error);
-        res.status(500).json ({
-            error:"Error interno del servidor"
-        });
+        procesaErrores(res,error);
     }
 });
 
@@ -76,10 +71,7 @@ router.post("/", async (req, res) => {
             message: "Producto agregado con exito"
         });
     } catch (error) {
-        console.error("Error al agregar el producto", error);
-        res.status(500).json({
-            error:"Error interno del servidor"
-        });
+        procesaErrores(res,error);
     }  
 });
 
@@ -93,10 +85,7 @@ router.put("/:pid", async (req, res) => {
             message: "Producto actualizado exitosamente"
         });
     } catch (error) {
-        console.error("Error al actualizar el producto", error);
-        res.status(500).json({
-            error:"Error interno del servidor"
-        });
+        procesaErrores(res,error);
     }
 });
 
@@ -110,10 +99,7 @@ router.delete("/:pid", async (req, res) => {
             message: "Producto eliminado con exito"
         });
     } catch (error) {
-        console.error("Error al eliminar el producto", error);
-        res.status(500).json({
-            error:"Error interno del servidor"
-        });
+        procesaErrores(res,error);
     }
 });
 

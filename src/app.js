@@ -1,17 +1,24 @@
 import express from "express";
 import session from "express-session";
-import __dirname from './utils.js';
+import __dirname  from './utils.js';
 import path from 'path';
+import passport from "passport";
+import connectMongo from 'connect-mongo';
 import { engine } from "express-handlebars";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import productsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
 import viewsRouter from "./routes/views.router.js";
+import sessionsRouter from './routes/sessions.router.js';
 import ProductManager from "./dao/fs/productManager.js";
 import ProductModel from "./dao/models/product.model.js";
 import "./database.js";
 import { config } from "./config/config.js";
+import { initPassport } from "./config/passport.config.js";
+import { auth } from './middleware/auth.js';
+import cookieParser from "cookie-parser";
+
 
 const app = express(); 
 
@@ -19,22 +26,33 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("./src/public"));
-app.use(session({
-    secret:config.SECRET_SESSION,
-    resave: true, 
-    saveUninitialized: true,
-}));
+app.use(cookieParser());
 
+// app.use(session({
+//     secret: config.SECRET_SESSION,
+//     resave:false, 
+//     saveUninitialized:false,
+//     store: connectMongo.create({
+//         mongoUrl: config.MONGO_URL,
+//         dbName: config.DB_NAME,
+//         ttl: 3600
+//     })
+// }));
 
+initPassport();
+app.use(passport.initialize());
 // Express-Handlebars
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
 app.set('views', path.join(__dirname,'/views'));
 
 // Rutas
+app.use('/api/sessions', sessionsRouter);
 app.use("/api/carts", cartsRouter);
-app.use("/api/products", productsRouter);
+app.use("/api/products", auth, productsRouter);
 app.use("/", viewsRouter);
+
+
 
 // Crea el servidor HTTP usando createServer de http
 const httpServer = createServer(app);
