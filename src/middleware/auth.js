@@ -1,20 +1,17 @@
-import jwt from "jsonwebtoken";
-import { config } from "../config/config.js"
+export function soloAdmin(req, res, next) {
+    if(req.user.role === "admin") {
+        next(); 
+    } else {
+        res.status(403).send("Acceso denegado, este lugar es solo para admin queridooo"); 
+    }
+}
 
-export const auth = (req, res, next) => {
-    
-    if(!req.cookies.tokenCookie){
-        res.setHeader('Content-Type','application/json');
-        return res.status(400).json({error:`Unauthorized - no hay usuario logueado en el sistema`});
+
+export function soloUser(req, res, next) {
+    if(req.user.role === "user") {
+        next(); 
+    } else {
+        res.status(403).send("Acceso denegado, este lugar es solo para usuarios comunachos");
     }
 
-    let token = req.cookies.tokenCookie;
-    try{
-        req.user = jwt.verify(token, config.SECRET);
-    }catch (error) {
-        res.setHeader('Content-Type','application/json');
-        return res.status(401).json({error:'${error.message}'})
-    }
-    
-    next()
 }

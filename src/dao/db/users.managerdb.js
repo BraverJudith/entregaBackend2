@@ -10,5 +10,4 @@ export class UsersManagerDB{
     static async getUserBy(filtro={}){
         return await usersModel.findOne(filtro).lean()
     }
-
 }

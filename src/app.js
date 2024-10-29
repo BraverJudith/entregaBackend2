@@ -1,6 +1,6 @@
 import express from "express";
-import session from "express-session";
-import __dirname  from './utils.js';
+import cookieParser from "cookie-parser";
+import __dirname, { passportCall, auth }  from './utils.js';
 import path from 'path';
 import passport from "passport";
 import connectMongo from 'connect-mongo';
@@ -16,8 +16,7 @@ import ProductModel from "./dao/models/product.model.js";
 import "./database.js";
 import { config } from "./config/config.js";
 import { initPassport } from "./config/passport.config.js";
-import { auth } from './middleware/auth.js';
-import cookieParser from "cookie-parser";
+
 
 
 const app = express(); 
@@ -28,19 +27,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("./src/public"));
 app.use(cookieParser());
 
-// app.use(session({
-//     secret: config.SECRET_SESSION,
-//     resave:false, 
-//     saveUninitialized:false,
-//     store: connectMongo.create({
-//         mongoUrl: config.MONGO_URL,
-//         dbName: config.DB_NAME,
-//         ttl: 3600
-//     })
-// }));
-
+// Passport
 initPassport();
 app.use(passport.initialize());
+
 // Express-Handlebars
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
@@ -49,7 +39,7 @@ app.set('views', path.join(__dirname,'/views'));
 // Rutas
 app.use('/api/sessions', sessionsRouter);
 app.use("/api/carts", cartsRouter);
-app.use("/api/products", auth, productsRouter);
+app.use("/api/products", auth, passportCall("current"), productsRouter);
 app.use("/", viewsRouter);
 
 

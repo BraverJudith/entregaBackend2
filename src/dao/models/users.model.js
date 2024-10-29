@@ -1,13 +1,34 @@
 import mongoose from 'mongoose';
 import { createHash } from '../../utils.js'; 
+
 const userSchema = new mongoose.Schema({
-    first_name: String,
-    last_name: String,
-    email: { type: String, unique: true },
-    age: Number,
-    password: String, 
-    cart: { type: mongoose.Schema.Types.ObjectId, ref: 'Carts' },
-    role: { type: String, default: 'user' } 
+    first_name: {
+        type: String, 
+        required: true
+    },
+    last_name: {
+        type: String, 
+        required: true
+    }, 
+    email: {
+        type: String, 
+        required: true,
+        unique: true, 
+        index: true
+    }, 
+    password: {
+        type: String, 
+        required: true
+    }, 
+    age: {
+        type: Number, 
+        required: true
+    },
+    role: {
+        type: String, 
+        enum: ["admin", "user"], 
+        default: "user"
+    }
 });
 
 // Middleware para hash de contraseña
@@ -18,6 +39,3 @@ userSchema.pre('save', function (next) {
 });
 
 export const usersModel = mongoose.model('usuarios', userSchema);
-
-
-
