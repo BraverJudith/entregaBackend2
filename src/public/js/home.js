@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p>${producto.description}</p>
                 <p>Precio: $${producto.price}</p>
                 <p>Categoría: ${producto.category}</p>
-                <a  href="/api/products/${producto._id}">Ver producto</a>
+                <a href="/api/products/${producto._id}">Ver producto</a>
                 <form action="/api/carts/add/${producto._id}" method="POST">
                     <button type="submit">Agregar al carrito</button>
                 </form>
@@ -31,6 +31,47 @@ document.addEventListener('DOMContentLoaded', () => {
             listaProductos.appendChild(div);
         });
     };
+
+    const inputEmail = document.getElementById("email");
+    const inputPass = document.getElementById("password");
+    const btnSubmit = document.getElementById("btnSubmit");
+    const loginForm = document.getElementById("loginForm"); // Asegúrate de que el formulario tenga este ID
+
+    loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        // Deshabilitar el botón para evitar doble clic
+        btnSubmit.disabled = true;
+
+        let email = inputEmail.value;
+        let password = inputPass.value;
+        if (!email || !password) {
+            alert("Complete datos...!!!");
+            btnSubmit.disabled = false; // Rehabilitar el botón
+            return;
+        }
+
+        const body = { email, password };
+        let respuesta = await fetch("/api/sessions/login", {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(body)
+        });
+
+        if (respuesta.status >= 400) {
+            let { error } = await respuesta.json();
+            alert(error);
+            btnSubmit.disabled = false; // Rehabilitar el botón
+            return;
+        } else {
+            let datos = await respuesta.json();
+            console.log(datos);
+            alert(datos.message);
+        }
+    });
+});
 
     /*const btnAgregarProducto = document.getElementById("agregar");
     if (btnAgregarProducto) {
@@ -62,4 +103,3 @@ document.addEventListener('DOMContentLoaded', () => {
         socket.emit("agregarProducto", nuevoProducto);
         document.getElementById("formularioAgregarProducto").reset();
     };*/
-});

@@ -1,11 +1,11 @@
 //conexion a Mongoose
 
 import mongoose from "mongoose";
+import { config } from "./config/config.js";
 
 
+// conectamos base de datos
 
-// conectamos basa de datos
-
-mongoose.connect("mongodb+srv://bjb64:bri1abi2@cluster0.vblhkhm.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0")
+mongoose.connect(config.MONGO_URL)
     .then ( () => console.log("conexion existosa"))
     .catch((error) => console.log("error de conexion", error));

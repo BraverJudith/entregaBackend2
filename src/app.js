@@ -1,32 +1,48 @@
 import express from "express";
+import cookieParser from "cookie-parser";
+import __dirname, { passportCall, auth }  from './utils.js';
+import path from 'path';
+import passport from "passport";
+import connectMongo from 'connect-mongo';
 import { engine } from "express-handlebars";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import productsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
 import viewsRouter from "./routes/views.router.js";
+import sessionsRouter from './routes/sessions.router.js';
 import ProductManager from "./dao/fs/productManager.js";
-import "./database.js";
 import ProductModel from "./dao/models/product.model.js";
+import "./database.js";
+import { config } from "./config/config.js";
+import { initPassport } from "./config/passport.config.js";
 
-const PUERTO = 8080;
+
+
 const app = express(); 
 
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("./src/public"));
+app.use(cookieParser());
 
+// Passport
+initPassport();
+app.use(passport.initialize());
 
 // Express-Handlebars
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
-app.set("views", "./src/views");
+app.set('views', path.join(__dirname,'/views'));
 
 // Rutas
+app.use('/api/sessions', sessionsRouter);
 app.use("/api/carts", cartsRouter);
-app.use("/api/products", productsRouter);
+app.use("/api/products", auth, passportCall("current"), productsRouter);
 app.use("/", viewsRouter);
+
+
 
 // Crea el servidor HTTP usando createServer de http
 const httpServer = createServer(app);
@@ -75,7 +91,7 @@ io.on("connection", async (socket) => {
 });
 
 // Escuchar el puerto
-httpServer.listen(PUERTO, () => {
-    console.log(`Escuchando en el puerto: ${PUERTO}`);
+httpServer.listen(config.PORT, () => {
+    console.log(`Escuchando en el puerto: ${config.PORT}`);
     app.use("/", viewsRouter);
 });
