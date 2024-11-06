@@ -5,8 +5,7 @@ import github from "passport-github2";
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import { UsersManagerDB } from "../dao/db/users.managerdb.js";
 import { createHash, isValidPassword } from "../utils.js";
-import { config } from "../config/config.js";
-
+import  { config } from "./config.js";
 // Función para extraer el token JWT de la cookie llamada "token"
 const cookieExtractor = req => req?.cookies?.token || null;
 

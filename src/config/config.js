@@ -1,11 +1,15 @@
-export  const config = {
-    PORT:3000, 
-    MONGO_URL:"mongodb+srv://bjb64:bri1abi2@cluster0.vblhkhm.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0",
-    DB_NAME:"ecommerce", 
-    SECRET:"CoderCoder123", 
-    SECRET_SESSION:"CoderCoder123",
-    JWT_SECRET:"Braver",
-    GITHUB_CALLBACK_URL: "http://localhost:3000/api/sessions/githubcallback",
-    GITHUB_CLIENT_ID: "Iv23li33MB0evlynIklk",
-    GITHUB_CLIENT_SECRET:"bcc05edc96dc2ee72c501923aca18f2879b11316"
+import dotenv from "dotenv";
+
+dotenv.config();
+
+export const config ={
+    PORT:process.env.PORT, 
+    MONGO_URL:process.env.MONGO_URL,
+    DB_NAME:process.env.DB_NAME, 
+    SECRET:process.env.SECRET, 
+    SECRET_SESSION:process.env.SECRET_SESSION,
+    JWT_SECRET:process.env.JWT_SECRET,
+    GITHUB_CALLBACK_URL: process.env.GITHUB_CALLBACK_URL,
+    GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
+    GITHUB_CLIENT_SECRET:process.env.GITHUB_CLIENT_SECRET
 }
