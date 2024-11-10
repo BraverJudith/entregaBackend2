@@ -37,7 +37,6 @@ export class CartDAO {
       } else {
         cart.products.push({ product: productId, quantity });
       }
-
       await cart.save();
       return cart.toJSON();
     } catch (error) {
@@ -51,7 +50,6 @@ export class CartDAO {
     try {
       const cart = await CartModel.findById(cartId);
       if (!cart) throw new Error("Cart not found");
-
       cart.products = cart.products.filter(p => p.product.toString() !== productId);
       await cart.save();
       return cart.toJSON();
