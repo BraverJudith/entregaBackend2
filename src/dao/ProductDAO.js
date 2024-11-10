@@ -21,7 +21,7 @@ export class ProductDao {
             throw error;
         }
     }
-
+    // cargar producto con filtro
     static async getProductsBy(filtro={}){
         return ProductModel.findOne(filtro).lean();
     }

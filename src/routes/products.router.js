@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { procesaErrores } from "../utils.js";
 import { ProductController } from "../controller/ProductController.js";
 
 
@@ -15,31 +14,9 @@ router.get("/:pid", ProductController.getProductBy);
 router.post("/", ProductController.addNewProduct);
 
 // Actualizar un producto por ID
-router.put("/:pid", async (req, res) => {
-    const { pid } = req.params;
-    const productoActualizado = req.body;
-    try {
-        await productManagerDB.updateProduct(pid,productoActualizado)
-        res.json({
-            message: "Producto actualizado exitosamente"
-        });
-    } catch (error) {
-        procesaErrores(res,error);
-    }
-});
+router.put("/:pid", ProductController.updateProduct);
 
 // Eliminar un producto
-router.delete("/:pid", async (req, res) => {
-    const { pid } = req.params;
-
-    try{
-        await productManagerDB.deleteProduct(pid);
-        res.status(201).json({
-            message: "Producto eliminado con exito"
-        });
-    } catch (error) {
-        procesaErrores(res,error);
-    }
-});
+router.delete("/:pid", ProductController.deleteProduct);
 
 export default router;

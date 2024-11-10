@@ -39,7 +39,7 @@ app.set('views', path.join(__dirname,'/views'));
 // Rutas
 app.use('/api/sessions', sessionsRouter);
 app.use("/api/carts", cartsRouter);
-app.use("/api/products", auth, passportCall("current"), productsRouter);
+app.use("/api/products", productsRouter);
 app.use("/", viewsRouter);
 
 

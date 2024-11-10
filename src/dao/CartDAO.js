@@ -2,6 +2,17 @@ import CartModel from "./models/cart.model.js";
 
 export class CartDAO {
 
+  // Obtiene todos los carritos
+  static async getCarts () {
+    try {
+        const carts = await CartModel.find().populate('products.product');
+        return carts;
+    } catch (error) {
+        console.error("Error getting all carts:", error);
+        throw new Error("Error getting all carts");
+    }
+}
+
     // Crear un nuevo carrito vacío
   static async createCart() {
     try {
@@ -59,17 +70,44 @@ export class CartDAO {
     }
   }
 
-  // Vaciar el carrito
-  static async clearCart(cartId) {
+  //actualiza cantidades
+  static async updateProductQuantity (cartId, pid, quantity) {
     try {
-      const cart = await CartModel.findById(cartId);
-      if (!cart) throw new Error("Cart not found");
-      cart.products = [];
-      await cart.save();
-      return cart.toJSON();
+        const cart = await CartModel.findById(cartId);
+        if (!cart) {
+            return null; 
+        }
+
+        const productIndex = cart.products.findIndex(p => p.product.toString() === pid);
+
+        if (productIndex !== -1) {d
+            cart.products[productIndex].quantity = quantity;
+        } else {
+            cart.products.push({ product: pid, quantity });
+        }
+
+        await cart.save();
+
+        return cart;
     } catch (error) {
-      console.error("Error clearing cart:", error);
-      throw error;
+        console.error("Error al actualizar cantidad del producto:", error);
+        throw new Error("Error al actualizar cantidad del producto");
+    }
+}
+
+// Borra el carrito por el cartId
+static async clearCart (cartId) {
+    try {
+        const cart = await CartModel.findById(cartId);
+        if (!cart) {
+            return null; 
+        }
+        cart.products = [];
+        await cart.save();
+        return cart.toJSON();
+    } catch (error) {
+        console.error("Error al eliminar carrito:", error);
+        throw new Error("Error al eliminar carrito");
     }
   }
 }

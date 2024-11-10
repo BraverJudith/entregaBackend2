@@ -1,6 +1,9 @@
-import { ProductDao } from "../dao/ProductDAO";
+import { ProductDao } from "../dao/ProductDAO.js";
+import ProductModel  from "../dao/models/product.model.js";
+import { procesaErrores } from "../utils.js";
 
 export class ProductController {
+    // Obtener todos los productos
     static getProduct = async (req, res) => {
         try {
         const { limit = 10, page = 1, sort = "asc", query = "" } = req.query;
@@ -14,7 +17,8 @@ export class ProductController {
             query: query,
             }
         );
-        res.json({
+        res.setHeader('Content-Type','application/json');
+        res.status(201).json({
             payload: productos.docs,
             totalPages: productos.totalPages,
             prevPage: productos.prevPage,
@@ -31,19 +35,24 @@ export class ProductController {
         procesaErrores(res, error);
         }
     };
+    // Obtener producto por ID
     static getProductBy = async (req, res) => {
+        
         const { pid } = req.params;
+        console.log(pid)
         try {
-        const product = await productManagerDB.getProductById(pid);
+        const product = await ProductDao.findById(pid);
         if (!product) {
             return res.status(404).json({ error: "Producto no encontrado" });
         } else {
-            res.render("productDetail", { product });
+            res.setHeader('Content-Type','application/json');
+            res.status(201).render("productDetail", { product });
         }
         } catch (error) {
         procesaErrores(res, error);
         }
     };
+    // Agregar un nuevo producto al catalogo
     static addNewProduct = async (req, res) => {
         const {
         title,
@@ -60,7 +69,6 @@ export class ProductController {
             .json({ message: "Todos los campos son obligatorios" });
         }
         try {
-        // Verificar si el código ya existe
         const productExist = await ProductModel.findOne({ code });
         if (productExist) {
             return res.status(400).json({ message: "El código debe ser único" });
@@ -77,12 +85,35 @@ export class ProductController {
             thumbnails: thumbnails || [],
         });
         await ProductDao.addProduct(newProduct);
+        res.setHeader('Content-Type','application/json');
         res.status(201).json({ message: "Producto agregado con éxito" });
         } catch (error) {
         procesaErrores(res, error);
         }
     }
+    //actualizar producto por ID
+    static updateProduct = async (req, res) => {
+        const { pid } = req.params;
+        const productoActualizado = req.body;
+        try {
+            await ProductDao.updateProduct(pid,productoActualizado)
+            res.status(201).json({
+                message: "Producto actualizado exitosamente"
+            });
+        } catch (error) {
+            procesaErrores(res,error);
+        }
+    }
+    static deleteProduct = async (req, res) => {
+        const { pid } = req.params;
+        try{
+            await ProductDao.deleteProduct(pid);
+            res.setHeader('Content-Type','application/json')
+            res.status(201).json({
+                message: "Producto eliminado con exito"
+            });
+        } catch (error) {
+            procesaErrores(res,error);
+        }
+    }
 }
-/*try {
-    
-}*/

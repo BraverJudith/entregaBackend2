@@ -26,8 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <a href="/api/products/${producto._id}">Ver producto</a>
                 <form action="/api/carts/add/${producto._id}" method="POST">
                     <button type="submit">Agregar al carrito</button>
-                </form>
-            `;
+                </form>`;
             listaProductos.appendChild(div);
         });
     };
@@ -35,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputEmail = document.getElementById("email");
     const inputPass = document.getElementById("password");
     const btnSubmit = document.getElementById("btnSubmit");
-    const loginForm = document.getElementById("loginForm"); // Asegúrate de que el formulario tenga este ID
+    const loginForm = document.getElementById("loginForm"); 
 
     loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();
