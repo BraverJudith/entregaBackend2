@@ -1,6 +1,9 @@
+import { userService } from "../services/User.service";
+
+
 export class UserController {
     static getUser = async(req,res) => {
-        let user = user;
+        let user = await userService.getUsers();
     }
 }
 /*const result = await deleteUser("12345");

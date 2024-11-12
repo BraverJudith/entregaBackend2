@@ -68,9 +68,15 @@ export const initPassport = () => {
             },
             async (req, username, password, done) => {
                 try {
-                    const { first_name, last_name, age } = req.body;
+                    const { first_name, last_name, age, role } = req.body;
                     if (!first_name || !last_name || !age) {
-                        return done(null, false, { message: "Nombre, apellido y edad son requeridos" });
+                        return done(null, false, { message: `Nombre, apellido y edad son requeridos` });
+                    }
+                    if(role){
+                        role = role.toLowerCase()
+                        if(role !== "admin" || role !== "user"){
+                            return done(null, false, {message: `solo se admite rol user/admin`})
+                        }
                     }
                     let exist = await UsersManagerDB.getUserBy({ email: username });
                     if (exist) {
@@ -83,7 +89,7 @@ export const initPassport = () => {
                         email: username,
                         age,
                         password: hashedPassword,
-                        role: "user"
+                        role
                     });
                     return done(null, newUser);
                 } catch (error) {
