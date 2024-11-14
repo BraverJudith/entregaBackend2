@@ -10,6 +10,7 @@ import { Server } from "socket.io";
 import productsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
 import viewsRouter from "./routes/views.router.js";
+import userRouter from "./routes/user.router.js";
 import sessionsRouter from './routes/sessions.router.js';
 import ProductManager from "./dao/fs/productManager.js";
 import ProductModel from "./dao/models/product.model.js";
@@ -37,6 +38,7 @@ app.set("view engine", "handlebars");
 app.set('views', path.join(__dirname,'/views'));
 
 // Rutas
+app.use('/api/user', userRouter);
 app.use('/api/sessions', sessionsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/products", productsRouter);

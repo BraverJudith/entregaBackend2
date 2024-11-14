@@ -1,6 +1,6 @@
-import { usersModel } from "./models/users.model"
+import { usersModel } from "./models/users.model.js"
 
-export class UserDao {
+export class UserDAO {
     static async getUserBy(filter={}){
         return await usersModel.findOne(filter).lean()
     }
@@ -18,3 +18,4 @@ export class UserDao {
         return await usersModel.findByIdAndDelete(id);
     }
 }
+
