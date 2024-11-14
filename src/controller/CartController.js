@@ -1,5 +1,7 @@
 import { CartDAO } from "../dao/CartDAO.js";
-import CartModel  from "../dao/models/cart.model.js";
+import { ProductDAO } from "../dao/ProductDAO.js";
+import { TicketService } from "../services/Ticket.service.js";
+import { v4 as uuidv4 } from 'uuid';
 import { procesaErrores } from "../utils.js";
 
 export class CartController {
@@ -139,6 +141,53 @@ export class CartController {
             res.status(500).json({ status: 'error', message: `Error al actualizar cantidad del producto ${pid}` });
         }
     }
+    //Finalizar compra y creacion de ticket
+    static purchaseCart = async (req, res) => {
+        const { cid } = req.params;
+        const user = req.user;
+
+        try {
+            const cart = await CartDAO.getCartById(cid);
+            if (!cart) {
+                return res.status(404).json({ success: false, error: 'Carrito no encontrado' });
+            }
+
+            let totalAmount = 0;
+            const unavailableProducts = [];
+            const productsToPurchase = [];
+
+            for (const item of cart.products) {
+                const product = await ProductDAO.getProductById(item.product);
+
+                if (product.stock >= item.quantity) {
+                    product.stock -= item.quantity;
+                    await product.save();
+
+                    totalAmount += product.price * item.quantity;
+                    productsToPurchase.push({ product: item.product, quantity: item.quantity });
+                } else {
+                    unavailableProducts.push(item.product);
+                }
+            }
+
+            // Generar el ticket con los datos de la compra
+            const ticket = await TicketService.createTicket({
+                code: uuidv4(),
+                purchase_datetime: new Date(),
+                amount: totalAmount,
+                purchaser: user.email,
+                products: productsToPurchase
+            });
+
+            cart.products = cart.products.filter(item => unavailableProducts.includes(item.product.toString()));
+            await cart.save();
+
+            res.json({ success: true, ticket, unavailableProducts });
+        } catch (error) {
+            console.error('Error al procesar la compra del carrito:', error);
+            res.status(500).json({ success: false, error: 'Error al procesar la compra del carrito' });
+        }
+    };
 
     // Borra el carrito
     static clearCart = async (req, res) => {

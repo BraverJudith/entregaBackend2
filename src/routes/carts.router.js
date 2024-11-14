@@ -27,6 +27,9 @@ router.put('/:cid', passport.authenticate('jwt', { session: false }),CartControl
 // Actualizar la cantidad de un producto en el carrito
 router.put('/:cid/products/:pid', passport.authenticate('jwt', { session: false }), CartController.updateProductQuantity);
 
+//Finalizar la compra del carrito
+router.post('/:cid/purchase', passport.authenticate('jwt', { session: false }), CartController.purchaseCart);
+
 // Borrar el carrito del usuario
 router.delete('/:cid', passport.authenticate('jwt', { session: false }), CartController.clearCart);
 

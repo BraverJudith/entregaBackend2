@@ -11,6 +11,7 @@ import productsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
 import viewsRouter from "./routes/views.router.js";
 import userRouter from "./routes/user.router.js";
+import ticketRouter from "./routes/ticket.router.js";
 import sessionsRouter from './routes/sessions.router.js';
 import ProductManager from "./dao/fs/productManager.js";
 import ProductModel from "./dao/models/product.model.js";
@@ -42,6 +43,7 @@ app.use('/api/user', userRouter);
 app.use('/api/sessions', sessionsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/products", productsRouter);
+app.use("/api/tickets", ticketRouter)
 app.use("/", viewsRouter);
 
 
