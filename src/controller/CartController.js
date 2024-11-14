@@ -1,5 +1,5 @@
 import { CartDAO } from "../dao/CartDAO.js";
-import { ProductDAO } from "../dao/ProductDAO.js";
+import { ProductDao } from "../dao/ProductDAO.js";
 import { TicketService } from "../services/Ticket.service.js";
 import { v4 as uuidv4 } from 'uuid';
 import { procesaErrores } from "../utils.js";
@@ -157,7 +157,7 @@ export class CartController {
             const productsToPurchase = [];
 
             for (const item of cart.products) {
-                const product = await ProductDAO.getProductById(item.product);
+                const product = await ProductDao.getProductsBy({ _id: item.product });
 
                 if (product.stock >= item.quantity) {
                     product.stock -= item.quantity;
