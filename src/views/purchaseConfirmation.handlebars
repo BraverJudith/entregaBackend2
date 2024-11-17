@@ -1,24 +1,36 @@
-<h1>Confirmación de Compra</h1>
+<div class="purchase-container">
+    <h1>Confirmación de Compra</h1>
 
-{{#if ticket}}
-    <h2>Ticket</h2>
-    <p>Código: {{ticket.code}}</p>
-    <p>Fecha: {{ticket.purchase_datetime}}</p>
-    <p>Total: {{ticket.amount}}</p>
-    <h3>Productos comprados:</h3>
+    {{#if ticket}}
+        <h2>Ticket</h2>
+        <div class="purchase-details">
+            <p><strong>Código:</strong> {{ticket.code}}</p>
+            <p><strong>Fecha:</strong> {{ticket.purchase_datetime}}</p>
+            <p><strong>Total:</strong> ${{ticket.amount}}</p>
+            <h3>Productos comprados:</h3>
+            <ul>
+                {{#each ticket.products}}
+                    <li>
+                        <p><strong>Producto:</strong> {{this.product}} - <strong>Cantidad:</strong> {{this.quantity}}</p>
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+    {{else}}
+        <p>No se generó un ticket.</p>
+    {{/if}}
+
+    <h3>Productos sin stock:</h3>
     <ul>
-        {{#each ticket.products}}
-            <li>Producto: {{this.product}} - Cantidad: {{this.quantity}}</li>
+        {{#each unavailableProducts}}
+            <li>
+                <p><strong>Producto:</strong> {{this.product}} - <strong>Cantidad:</strong> {{this.quantity}}</p>
+            </li>
         {{/each}}
     </ul>
-{{else}}
-    <p>No se generó un ticket.</p>
-{{/if}}
 
-<h3>Productos sin stock:</h3>
-<ul>
-    {{#each unavailableProducts}}
-        <li>Producto: {{this.product}} - Cantidad: {{this.quantity}}</li>
-    {{/each}}
-</ul>
-<p>{{message}}</p>
+    <p class="message">{{message}}</p>
+    
+    <!-- Botón para continuar con la compra o regresar -->
+    <a href="/api/products" class="button-link">Volver al inicio</a>
+</div>

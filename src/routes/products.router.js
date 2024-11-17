@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { ProductController } from "../controller/ProductController.js";
-import { verificarRol } from "../middleware/auth.js"; 
+import { verificarRol, isAdmin } from "../middleware/auth.js"; 
 import { passportCall } from "../utils.js";
 
 
@@ -19,6 +19,6 @@ router.post("/", passportCall("current"), verificarRol(["admin"]), ProductContro
 router.put("/:pid", passportCall("current"), verificarRol(["admin"]), ProductController.updateProduct);
 
 // Eliminar un producto
-router.delete("/:pid", passportCall("current"), verificarRol(["admin"]), ProductController.deleteProduct);
+router.delete("/:pid", passportCall("current"), isAdmin, ProductController.deleteProduct);
 
 export default router;

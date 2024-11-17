@@ -3,7 +3,8 @@ import { ProductDao } from "../dao/ProductDAO.js";
 import { ticketService } from "../services/Ticket.service.js";
 import { v4 as uuidv4 } from 'uuid';
 import { procesaErrores } from "../utils.js";
-import { viewsController } from "./ViewsController.js"
+import { viewsController } from "./ViewsController.js";
+//import { sendPurchaseEmail } from '../utils.js';
 
 export class CartController {
     //Obtiene todos los carritos (tengo que dejar solo al administrador)
@@ -217,6 +218,7 @@ export class CartController {
                 console.error('No se pudo generar el ticket');
                 return res.status(500).json({ success: false, error: 'Error al generar el ticket' });
             }
+            //await sendPurchaseEmail(userEmail, ticket);
             await CartDAO.clearCart(cartId);
             const plainTicket = ticket.toObject();
             res.render('purchaseConfirmation', { 

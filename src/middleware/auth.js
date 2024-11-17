@@ -14,7 +14,7 @@ export const verificarRol = (rolesPermitidos) => {
 };
 
 export function authenticateJWT (req, res, next) {
-    const token = req.cookies.sestoken;
+    const token = req.cookies.sestoken || req.headers.authorization?.split(' ')[1];
     if (!token) return res.redirect("/login");
 
     jwt.verify(token, config.jwtSecret, (err, user) => {
@@ -22,4 +22,19 @@ export function authenticateJWT (req, res, next) {
         req.user = user;
         next();
     });
+};
+export const isAdmin = (req, res, next) => {
+    if (req.user && req.user.role === 'admin') {
+        return next();
+    } else {
+        return res.status(403).json({ error: "Solo los administradores pueden acceder a esta ruta." });
+    }
+};
+
+export const isUser = (req, res, next) => {
+    if (req.user && req.user.role === 'user') {
+        return next();
+    } else {
+        return res.status(403).json({ error: "Solo los usuarios pueden acceder a esta ruta." });
+    }
 };

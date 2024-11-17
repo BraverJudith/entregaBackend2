@@ -1,6 +1,5 @@
 import  { TicketDAO } from '../dao/TicketDAO.js';
 import { v4 as uuidv4 } from 'uuid';
-//import { sendPurchaseEmail } from '../utils/emailService';
 
 class TicketController {
     async createTicket(req, res) {
