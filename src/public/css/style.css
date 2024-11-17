@@ -4,6 +4,92 @@
     padding: 0;
     box-sizing: border-box;
 }
+/* Estilos para el menú */
+nav {
+    background-color: #007bff;
+    padding: 10px 0;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: #ddd;
+}
+
+/* Estilos para el formulario */
+form {
+    max-width: 400px;
+    margin: 0 auto 20px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: #444;
+}
+
+form input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+form button {
+    background: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+form button:hover {
+    background: #0056b3;
+}
+
+form p {
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Estilo para los enlaces dentro del formulario */
+form a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+form a:hover {
+    color: #0056b3;
+}
 
 body {
     font-family: Arial, sans-serif;

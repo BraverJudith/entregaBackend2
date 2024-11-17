@@ -2,25 +2,16 @@ import ProductModel from "./models/product.model.js";
 
 export class ProductDao {
     //cargar todos los productos
-    static async getProducts(filter = {}, options = {}) {
-        try {
-            const { page = 1, limit = 10, sort = {} } = options;
-            const queryFilter = {};
-            if (options.query) {
-                queryFilter.category = options.query;
+    
+        static async getProducts(filter = {}, options = {}) {
+            try {
+                const result = await ProductModel.paginate(filter, options);
+                return result;
+            } catch (error) {
+                console.error("Error al obtener los productos", error);
+                throw error;
             }
-            const arrayProductos = await ProductModel.paginate(queryFilter, {
-                page: parseInt(page, 10),
-                limit: parseInt(limit, 10),
-                sort: sort
-            });
-            arrayProductos.docs = arrayProductos.docs.map(doc => doc.toObject());
-            return arrayProductos;
-        } catch (error) {
-            console.error("Error al cargar el archivo de productos", error);
-            throw error;
         }
-    }
     // cargar producto con filtro
     static async getProductsBy(filtro={}){
         return ProductModel.findOne(filtro).lean();

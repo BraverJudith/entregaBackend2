@@ -16,3 +16,14 @@ export function soloUser(req, res, next) {
     }
 
 }
+
+export function authenticateJWT (req, res, next) {
+    const token = req.cookies["coderCookieToken"];
+    if (!token) return res.redirect("/login");
+
+    jwt.verify(token, config.jwtSecret, (err, user) => {
+        if (err) return res.redirect("/login");
+        req.user = user;
+        next();
+    });
+};

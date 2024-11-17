@@ -45,7 +45,6 @@ export const initPassport = () => {
                             return done(null, false, { message: `Solo se admite rol user/admin` });
                         }
                     }
-
                     const exist = await userService.getUserByEmail(username); 
                     if (exist) {
                         return done(null, false, { message: `El usuario ${username} ya existe` });
@@ -80,7 +79,7 @@ export const initPassport = () => {
                     if (!user) {
                         return done(null, false, { message: 'Usuario no encontrado o Contraseña incorrecta' });
                     }
-                    if (!isValidPassword(user, password)) { 
+                    if (isValidPassword(user, password)) { 
                         return done(null, false, { message: 'Usuario no encontrado o Contraseña incorrecta' });
                     }
                     delete user.password; 

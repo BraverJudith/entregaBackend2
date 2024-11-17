@@ -4,8 +4,11 @@ export class SessionsController {
     static async registro(req, res) {
         try {
             const user = req.user;
+            if (!user) { 
+                return res.status(400).json({ error: "Error en el registro, usuario no creado." });
+            }
             res.status(201).json({
-                message: `Registro exitoso para ${user.name}`,
+                message: `Registro exitoso para ${user.first_name}`,
                 usuario: user
             });
         } catch (error) {
@@ -17,11 +20,7 @@ export class SessionsController {
         try {
             const { token, user } = await SessionsService.login(req, res);
             res.cookie("sestok", token, { httpOnly: true, secure: true });
-            res.status(200).json({
-                message: `Login exitoso para ${user.first_name}`,
-                usuarioLogueado: user,
-                token
-            });
+            res.redirect("/api/products?page=1");
         } catch (error) {
             res.status(401).json({ error: error.message });
         }

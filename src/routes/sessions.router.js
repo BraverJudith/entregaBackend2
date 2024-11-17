@@ -6,7 +6,7 @@ const router = Router();
 
 router.get('/ruta-protegida', passport.authenticate("current", { session: false }), SessionsController.rutaProtegida);
 
-router.post('/registro', passport.authenticate("registro", { session: false, failureRedirect: "/error" }), SessionsController.registro);
+router.post('/registro', passport.authenticate("registro", { session: false}), SessionsController.registro);
 
 router.post('/login', SessionsController.login);
 
