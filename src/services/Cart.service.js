@@ -15,12 +15,14 @@ export class CartService {
     // Crea un carrito nuevo vacío
     static async createCart() {
         try {
-        const newCart = await CartDAO.createCart();
-        return newCart;
+            const cart = await CartDAO.createCart(); // Implementación en el DAO
+            return cart;
         } catch (error) {
-        throw new Error("Error al crear carrito");
+            console.error("Error al crear el carrito:", error);
+            throw new Error('Error al crear el carrito');
         }
     }
+    
 
     // Obtiene un carrito por su ID
     static async getCartById(cartId) {

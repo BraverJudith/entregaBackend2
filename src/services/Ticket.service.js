@@ -1,13 +1,21 @@
-import  TicketDAO  from "../dao/TicketDAO.js";
+import { TicketDAO }   from '../dao/TicketDAO.js';
+import { CartDAO }  from '../dao/CartDAO.js';
 
-export class TicketService {
-    static async createTicket(ticketData) {
-        try {
-            const ticket = await TicketDAO.createTicket(ticketData);
-            return ticket;
-        } catch (error) {
-            console.error("Error al crear el ticket:", error);
-            throw new Error("No se pudo crear el ticket");
-        }
+
+class TicketService {
+  // Finalizar compra
+    async finalizePurchase({ code, purchase_datetime, amount, purchaser, products }) {
+        const ticket = await TicketDAO.create({
+        code,
+        purchase_datetime,
+        amount,
+        purchaser,
+        products
+        });
+        //await CartDAO.clearCart(cart._id); 
+
+        return ticket;
     }
 }
+
+export const ticketService = new TicketService();

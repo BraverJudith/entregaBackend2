@@ -1,6 +1,7 @@
 
 import { productService } from "../services/Product.service.js"; 
 import { CartService } from "../services/Cart.service.js";
+import { CartDAO } from "../dao/CartDAO.js";
 
 class ViewsController{
     async renderHome (req, res) {
@@ -47,32 +48,39 @@ class ViewsController{
     };
 
     async renderCart (req, res) {
-        const cartId = req.params.cid;
         try {
-            const cart = await CartService.getCartById(cartId);
-            if(!cart) {
-                console.log(`Cart with ${cartId} not found`);
-                return res.status(404).json({ error: "Cart not found"});
+            const cartId = req.params.cid; 
+            const cart = await CartDAO.getCartById(cartId);
+        
+            if (!cart) {
+                return res.status(404).send('Carrito no encontrado');
             }
-            const productsInCart = cart.products.map(item => ({
-                product: item.toObject(),
-                quantity: item.quantity   
-            }));
-            res.render("carts", { products: productsInCart }); 
-        } catch (error) {
-            console.error("Error getting the cart", error);
-            res.status(500).json({ error: "Internal server error"}); 
-        }
+            console.log('Carrito con productos poblados:', cart);
+            const populatedCart = cart.toObject(); 
+
+            populatedCart.products = populatedCart.products.map(item => {
+            if (item.product.toObject) {
+                item.product = item.product.toObject();
+                }
+                return item;
+            });
+
+            res.render('carts', {
+                cart: populatedCart
+            });
+            } catch (error) {
+            console.error('Error mostrando el carrito:', error);
+            res.status(500).send('Error interno del servidor');
+            }
     };
-    async renderRegistro (req, res) { 
-        const token = req.cookies["coderCookieToken"];
-        if (token) return res.redirect("/productos");
-        res.render("register");
-    }
 
     async renderProfile (req, res) {
         res.render("profile", { user: req.user });
     }
-
+    async renderRegistro (req, res) { 
+        const token = req.cookies["sestoken"];
+        if (token) return res.redirect("/productos");
+        res.render("register");
+    }
 }
 export const viewsController = new ViewsController();

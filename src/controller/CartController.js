@@ -1,8 +1,9 @@
 import { CartDAO } from "../dao/CartDAO.js";
 import { ProductDao } from "../dao/ProductDAO.js";
-import { TicketService } from "../services/Ticket.service.js";
+import { ticketService } from "../services/Ticket.service.js";
 import { v4 as uuidv4 } from 'uuid';
 import { procesaErrores } from "../utils.js";
+import { viewsController } from "./ViewsController.js"
 
 export class CartController {
     //Obtiene todos los carritos (tengo que dejar solo al administrador)
@@ -21,7 +22,7 @@ export class CartController {
         const user = req.user;
         try {
             const cart = await CartDAO.createCart();
-            user.cartId = cart._id;
+            user.cart_id = cart._id;
             await user.save();
             res.json(cart);
         } catch (err) {
@@ -34,7 +35,7 @@ export class CartController {
     static getCartByID = async (req, res) => {
         const user = req.user; 
         try {
-            const cart = await CartDAO.getCartById(user.cartId);
+            const cart = await CartDAO.getCartById(user.cart_id);
             if (!cart) {
                 return res.status(404).json({ success: false, error: 'Carrito no encontrado' });
             }
@@ -50,12 +51,12 @@ export class CartController {
         const { pid } = req.params; 
         const user = req.user; 
         try {
-            const cart = await CartDAO.getCartById(user.cartId);
+            const cart = await CartDAO.getCartById(user.cart_id);
             if (!cart) {
                 return res.status(404).json({ success: false, error: 'Carrito no encontrado' });
             }
 
-            const updatedCart = await CartDAO.removeProductFromCart(user.cartId, pid);
+            const updatedCart = await CartDAO.removeProductFromCart(user.cart_id, pid);
             res.json(updatedCart);
         } catch (err) {
             console.error(`Error al eliminar producto ${pid} del carrito del usuario ${user._id}:`, err);
@@ -68,12 +69,12 @@ export class CartController {
         const user = req.user; 
         const { products } = req.body; 
         try {
-            const cart = await CartDAO.getCartById(user.cartId);
+            const cart = await CartDAO.getCartById(user.cart_id);
             if (!cart) {
                 return res.status(404).json({ success: false, error: 'Carrito no encontrado' });
             }
 
-            const updatedCart = await CartDAO.updateCart(user.cartId, products);
+            const updatedCart = await CartDAO.updateCart(user.cart_id, products);
             res.json(updatedCart);
         } catch (err) {
             console.error(`Error al actualizar carrito del usuario ${user._id}:`, err);
@@ -91,18 +92,18 @@ export class CartController {
             if (!productId) {
                 return res.status(400).json({ success: false, error: 'Falta el ID del producto' });
             }
-            if (!user || !user.cartId) {
+            console.log(user.cart_id)
+            if (!user || !user.cart_id) {
                 return res.status(400).json({ success: false, error: 'No se encontró el carrito del usuario' });
             }
 
-            const cart = await CartDAO.getCartById(user.cartId);
-
+            const cart = await CartDAO.getCartById(user.cart_id);
+            console.log(cart)
             if (!cart) {
                 return res.status(404).json({ success: false, error: 'Carrito no encontrado' });
             }
 
             const productIndex = cart.products.findIndex(p => p.product.toString() === productId);
-
             if (productIndex !== -1) {
                 cart.products[productIndex].quantity += quantity;
             } else {
@@ -111,8 +112,8 @@ export class CartController {
 
             await cart.save();
 
-            res.json({ success: true, cart });
-
+            return res.redirect(`/carts/${cart._id}`);
+            
         } catch (error) {
             console.error('Error adding products to Cart:', error);
             res.status(500).json({ success: false, error: 'Error adding products to Cart'});
@@ -126,11 +127,11 @@ export class CartController {
         const user = req.user; 
 
         try {
-            if (!user || !user.cartId) {
+            if (!user || !user.cart_id) {
                 return res.status(400).json({ status: 'error', message: 'El usuario no tiene un carrito asignado' });
             }
 
-            const cart = await CartDAO.updateProductQuantity(user.cartId, pid, quantity);
+            const cart = await CartDAO.updateProductQuantity(user.cart_id, pid, quantity);
             if (!cart) {
                 return res.status(404).json({ status: 'error', message: 'Carrito no encontrado' });
             }
@@ -141,54 +142,97 @@ export class CartController {
             res.status(500).json({ status: 'error', message: `Error al actualizar cantidad del producto ${pid}` });
         }
     }
+    // Método para mostrar el carrito en la vista
+    static async showCart(req, res) {
+        try {
+        const cartId = req.params.cid; // El ID del carrito se pasa como parámetro
+        const cart = await CartDAO.getCartById(cartId);
+    
+        if (!cart) {
+            return res.status(404).send("Cart not found");
+        }
+    
+        // Renderizar la vista de cart.handlebars y pasarle los datos del carrito
+        //res.render("carts", { cart });
+        viewsController.renderCart();
+        } catch (error) {
+        console.error("Error showing cart:", error);
+        res.status(500).send("Internal Server Error");
+        }
+    }
     //Finalizar compra y creacion de ticket
     static purchaseCart = async (req, res) => {
-        const { cid } = req.params;
-        const user = req.user;
-
         try {
-            const cart = await CartDAO.getCartById(cid);
+            const { cid } = req.params;
+            const cartId = cid || req.user.cart_id; 
+            const user = req.user;
+            const userEmail = user.email;
+        
+            const cart = await CartDAO.getCartById(cartId);
             if (!cart) {
                 return res.status(404).json({ success: false, error: 'Carrito no encontrado' });
             }
-
+        
             let totalAmount = 0;
             const unavailableProducts = [];
             const productsToPurchase = [];
-
+            const failedProducts = [];
+        
             for (const item of cart.products) {
                 const product = await ProductDao.getProductsBy({ _id: item.product });
-
-                if (product.stock >= item.quantity) {
-                    product.stock -= item.quantity;
-                    await product.save();
-
-                    totalAmount += product.price * item.quantity;
-                    productsToPurchase.push({ product: item.product, quantity: item.quantity });
-                } else {
+                if (!product) {
                     unavailableProducts.push(item.product);
+                    continue; 
+                }
+        
+                if (product.stock >= item.quantity) {
+                    product.stock -= item.quantity; 
+                    await product.save(); 
+        
+                    totalAmount += product.price * item.quantity;
+                    productsToPurchase.push({ product: item.product, quantity: item.quantity }); 
+                } else {
+                    unavailableProducts.push(item.product); 
+                    failedProducts.push(item); 
                 }
             }
 
-            // Generar el ticket con los datos de la compra
-            const ticket = await TicketService.createTicket({
-                code: uuidv4(),
-                purchase_datetime: new Date(),
-                amount: totalAmount,
-                purchaser: user.email,
-                products: productsToPurchase
+            if (failedProducts.length > 0 && productsToPurchase.length === 0) {
+                return res.render('carts', { 
+                    cart: { products: failedProducts }, 
+                    message: 'No se pudo realizar la compra. Algunos productos no tienen suficiente stock.',
+                });
+            }
+            let ticket = null;
+            if (productsToPurchase.length > 0) {
+                ticket = await ticketService.finalizePurchase({
+                    code: uuidv4(), 
+                    purchase_datetime: new Date(), 
+                    amount: totalAmount, 
+                    purchaser: userEmail, 
+                    products: productsToPurchase, 
+                });
+            }
+            if (!ticket) {
+                console.error('No se pudo generar el ticket');
+                return res.status(500).json({ success: false, error: 'Error al generar el ticket' });
+            }
+            await CartDAO.clearCart(cartId);
+            const plainTicket = ticket.toObject();
+            res.render('purchaseConfirmation', { 
+                ticket: plainTicket, 
+                unavailableProducts: failedProducts, 
+                message: ticket 
+                    ? 'Compra realizada exitosamente. Revisa el ticket.' 
+                    : 'Algunos productos no se pudieron comprar por falta de stock.',
             });
-
-            cart.products = cart.products.filter(item => unavailableProducts.includes(item.product.toString()));
-            await cart.save();
-
-            res.json({ success: true, ticket, unavailableProducts });
+        
         } catch (error) {
             console.error('Error al procesar la compra del carrito:', error);
             res.status(500).json({ success: false, error: 'Error al procesar la compra del carrito' });
         }
     };
-
+    
     // Borra el carrito
     static clearCart = async (req, res) => {
         const user = req.user;

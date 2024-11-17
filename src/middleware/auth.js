@@ -1,24 +1,20 @@
-export const isAdmin = (req, res, next) => {
-    const user = req.user; 
-
-    if (user && user.role === 'admin') {
-        return next(); 
+export const verificarRol = (rolesPermitidos) => {
+    return (req, res, next) => {
+    const user = req.user;
+    if (!user) {
+        return res.status(401).json({ error: "No autorizado. Debe autenticarse." });
     }
 
-    return res.status(403).json({ success: false, message: 'Acceso denegado. Solo los administradores pueden ver los carritos.' });
+    if (!rolesPermitidos.includes(user.role)) {
+        return res.status(403).json({ error: "No tiene permiso para acceder a esta ruta." });
+    }
+
+    next();
+    };
 };
 
-export function soloUser(req, res, next) {
-    if(req.user.role === "user") {
-        next(); 
-    } else {
-        res.status(403).send("Acceso denegado, este lugar es solo para usuarios");
-    }
-
-}
-
 export function authenticateJWT (req, res, next) {
-    const token = req.cookies["coderCookieToken"];
+    const token = req.cookies.sestoken;
     if (!token) return res.redirect("/login");
 
     jwt.verify(token, config.jwtSecret, (err, user) => {

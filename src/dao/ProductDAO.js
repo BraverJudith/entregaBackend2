@@ -14,7 +14,7 @@ export class ProductDao {
         }
     // cargar producto con filtro
     static async getProductsBy(filtro={}){
-        return ProductModel.findOne(filtro).lean();
+        return ProductModel.findOne(filtro);
     }
     // agregar producto
     static async addProduct(product={}){
@@ -24,7 +24,7 @@ export class ProductDao {
     // obtener producto por ID
     static async findById(id) {
         try {
-            const product = await ProductModel.findById(id).lean();
+            const product = await ProductModel.findById(id);
             return product;
             } catch (error) {
             console.error("Error finding product by ID:", error);

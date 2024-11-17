@@ -4,6 +4,160 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+/* Estilo para contenedor general */
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Títulos */
+h1, h2 {
+    color: #444;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Estilo para productos en carrito */
+.carritoContainer ul {
+    list-style: none;
+    padding: 0;
+}
+
+.carritoContainer li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
+}
+
+.carritoContainer .product-info {
+    display: flex;
+    align-items: center;
+}
+
+.carritoContainer .product-info img {
+    width: 50px;
+    height: 50px;
+    margin-right: 15px;
+    border-radius: 5px;
+}
+
+.carritoContainer .product-info p {
+    margin: 0;
+    color: #555;
+}
+
+.carritoContainer .quantity {
+    font-weight: bold;
+}
+
+.carritoContainer .total-price {
+    font-size: 16px;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.carritoContainer button {
+    background: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.carritoContainer button:hover {
+    background: #0056b3;
+}
+
+/* Estilos para la página de compra */
+.purchase-container {
+    text-align: center;
+    padding: 30px 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.purchase-container h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #444;
+}
+
+.purchase-details {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.purchase-details p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.purchase-details .order-number {
+    font-weight: bold;
+    color: #007bff;
+}
+
+.purchase-details .order-summary {
+    font-size: 18px;
+    color: #555;
+    margin-top: 15px;
+}
+
+.purchase-container a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+    font-size: 16px;
+    display: inline-block;
+    margin-top: 20px;
+}
+
+.purchase-container a:hover {
+    color: #0056b3;
+}
+
+/* Alineación de botones */
+.purchase-container button, .carritoContainer button {
+    padding: 10px 20px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 20px;
+}
+
+.purchase-container button:hover, .carritoContainer button:hover {
+    background: #0056b3;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 /* Estilos para el menú */
 nav {
     background-color: #007bff;

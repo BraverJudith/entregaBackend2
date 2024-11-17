@@ -1,0 +1,24 @@
+<h1>Confirmación de Compra</h1>
+
+{{#if ticket}}
+    <h2>Ticket</h2>
+    <p>Código: {{ticket.code}}</p>
+    <p>Fecha: {{ticket.purchase_datetime}}</p>
+    <p>Total: {{ticket.amount}}</p>
+    <h3>Productos comprados:</h3>
+    <ul>
+        {{#each ticket.products}}
+            <li>Producto: {{this.product}} - Cantidad: {{this.quantity}}</li>
+        {{/each}}
+    </ul>
+{{else}}
+    <p>No se generó un ticket.</p>
+{{/if}}
+
+<h3>Productos sin stock:</h3>
+<ul>
+    {{#each unavailableProducts}}
+        <li>Producto: {{this.product}} - Cantidad: {{this.quantity}}</li>
+    {{/each}}
+</ul>
+<p>{{message}}</p>

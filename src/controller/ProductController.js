@@ -12,21 +12,21 @@ export class ProductController {
             const sortOption = sort === "desc" ? { price: -1 } : { price: 1 };
 
             // Define los filtros para la búsqueda
-            const filter = query ? { title: { $regex: query, $options: 'i' } } : {}; // Filtrar por título, ignorando mayúsculas/minúsculas
+            const filter = query ? { title: { $regex: query, $options: 'i' } } : {};
 
             // Establecer opciones de paginación
             const options = {
                 limit: parseInt(limit, 10),
                 page: parseInt(page, 10),
                 sort: sortOption,
-                lean: true, // Devuelve documentos planos sin métodos de Mongoose
+                lean: true, 
             };
 
             // Obtener productos con paginación desde el DAO
             const productos = await ProductDao.getProducts(filter, options);
-
-            // Responder con los productos y la información de la paginación
-            res.setHeader('Content-Type', 'application/json');
+            const user = req.user;
+            const cart = user.cart;
+            console.log(user);
             res.status(200).render("products", {
                 productos: productos.docs,
                 totalPages: productos.totalPages,
@@ -39,6 +39,8 @@ export class ProductController {
                 nextLink: productos.hasNextPage ? `/api/products?page=${productos.nextPage}&limit=${limit}&sort=${sort}&query=${query}` : null,
                 isAsc: sort === "asc",
                 isDesc: sort === "desc",
+                user:user,
+                cart:user.cart_id
             });
         } catch (error) {
             procesaErrores(res, error);
@@ -54,7 +56,6 @@ export class ProductController {
         if (!product) {
             return res.status(404).json({ error: "Producto no encontrado" });
         } else {
-            res.setHeader('Content-Type','application/json');
             res.status(201).render("productDetail", { product });
         }
         } catch (error) {

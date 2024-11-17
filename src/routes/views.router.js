@@ -18,7 +18,7 @@ router.get('/login', viewsController.renderLogin);
 // Vista de cart
 router.get ("/carts/:cid", viewsController.renderCart);
 
-// Vista de registro
+
 router.get("/register", viewsController.renderRegistro);
 
 // Vista de perfil

@@ -19,9 +19,13 @@ class UserService {
         return await this.userDAO.getUserBy({ _id: id });
     }
 
-    async createUser(user) {
-        // creación de usuario en 'registro'
-        return await this.userDAO.createUser(user);
+    async createUser(userData) {
+        try {
+            const user = await this.userDAO.createUser(userData); 
+            return user;
+        } catch (error) {
+            throw new Error('Error al crear el usuario');
+        }
     }
 
     async updateUser(id, userData) {

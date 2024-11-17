@@ -2,31 +2,43 @@ import passport from "passport";
 import local from "passport-local";
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import { userService } from "../services/User.service.js";
-import { createHash, isValidPassword } from "../utils.js";
+import { isValidPassword } from "../utils.js";
 import { config } from "./config.js";
+import  UserDTO  from "../dto/UserDTO.js";
 
-const cookieExtractor = req => req?.cookies?.token || null;
+const searchToken = (req) => {
+    let token = null;
+    if (req.cookies && req.cookies.sestok) {
+        token = req.cookies.sestok;
+    }
+    return token;
+};
 
 export const initPassport = () => {
     passport.use("current",
         new JwtStrategy(
             {
-                jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+                jwtFromRequest: ExtractJwt.fromExtractors([searchToken]),
                 secretOrKey: config.JWT_SECRET
             },
             async (jwt_payload, done) => {
                 try {
-                    const user = await userService.findById(jwt_payload.id); 
-                    return user ? done(null, user) : done(null, false);
-                }  catch (error) {
-                    return done(error, false);
-                }
+                    const usuario=await userService.findById(jwt_payload.id)
+                    if(!usuario){
+                        return done (null,false)
+                    }
+                    const usuarioDTO = new UserDTO(usuario);
+                    return done(null, usuarioDTO);
+                    } catch (error) {
+                    return done(error);
+                    }
             }
         )
     );
 
     // Estrategia de registro
-    passport.use("registro",
+    passport.use(
+        "registro",
         new local.Strategy(
             {
                 passReqToCallback: true,
@@ -35,37 +47,27 @@ export const initPassport = () => {
             async (req, username, password, done) => {
                 try {
                     const { first_name, last_name, age } = req.body;
-                    let { role } = req.body;
-                    if (!first_name || !last_name || !age) {
-                        return done(null, false, { message: `Nombre, apellido y edad son requeridos` });
+    
+                    // Validar campos básicos
+                    if (!first_name || !last_name || !age || !password) {
+                        return done(null, false, { message: "Todos los campos son obligatorios" });
                     }
-                    if (role) {
-                        role = role.toLowerCase();
-                        if (role !== "admin" && role !== "user") {
-                            return done(null, false, { message: `Solo se admite rol user/admin` });
-                        }
-                    }
-                    const exist = await userService.getUserByEmail(username); 
+    
+                    // Verificar si el usuario ya existe
+                    const exist = await userService.getUserByEmail(username);
                     if (exist) {
                         return done(null, false, { message: `El usuario ${username} ya existe` });
                     }
-
-                    const hashedPassword = createHash(password);
-                    const newUser = await userService.createUser({
-                        first_name,
-                        last_name,
-                        email: username,
-                        age,
-                        password: hashedPassword,
-                        role
-                    });
-                    return done(null, newUser);
+    
+                    // Si pasa las validaciones, continuar al controller
+                    return done(null, { first_name, last_name, age, email: username, password });
                 } catch (error) {
                     return done(error);
                 }
             }
         )
     );
+    
 
     // Estrategia de inicio de sesión
     passport.use("login",

@@ -27,7 +27,7 @@ export class CartDAO {
   // Obtener un carrito por su ID
   static async getCartById(cartId) {
     try {
-      const cart = await CartModel.findById(cartId).populate("products.product").lean();
+      const cart = await CartModel.findById(cartId).populate("products.product");
       return cart;
     } catch (error) {
       console.error("Error getting cart by ID:", error);

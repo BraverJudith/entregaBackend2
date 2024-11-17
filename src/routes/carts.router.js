@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import { CartController } from "../controller/CartController.js";
-import { isAdmin } from "../middleware/auth.js"; 
+import { verificarRol } from "../middleware/auth.js"; 
 import passport from 'passport';
+import { viewsController } from '../controller/ViewsController.js';
 
 const router = Router();
 
@@ -9,10 +10,10 @@ const router = Router();
 router.post('/', passport.authenticate('current', { session: false }), CartController.createCart);
 
 // Obtener todos los carritos (solo accesible para admins)
-router.get("/", passport.authenticate('current', { session: false }), isAdmin, CartController.getCarts);
+router.get("/", passport.authenticate('current', { session: false }), verificarRol(["admin"]), CartController.getCarts);
 
 // Lista los productos del carrito por ID
-router.get('/:cid', passport.authenticate('current', { session: false }), CartController.getCartByID);
+router.get('/:cid', passport.authenticate('current', { session: false }), viewsController.renderCart);
 
 // Agrega productos al carrito
 router.post('/:cid/products/:productId', passport.authenticate('current', { session: false }), CartController.addProductToCart);

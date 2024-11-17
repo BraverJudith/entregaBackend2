@@ -7,7 +7,7 @@ class UserDTO {
         this.email = user.email;
         this.age = user.age;
         this.role = user.role;
-        this.cart_id = user.cart_id;
+        this.cart_id = user.cart.toString();
         if (includePassword) {
             this.password = user.password;
         }

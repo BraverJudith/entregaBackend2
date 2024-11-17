@@ -1,10 +1,10 @@
 import { ticketModel } from './models/ticket.model.js';
 
-class TicketDAO {
-    async create(ticketData) {
+export class TicketDAO {
+
+    static async create(ticketData) {
         try {
         const ticket = ticketModel.create(ticketData);
-        await ticket.save();
         return ticket;
         } catch (error) {
         console.error("Error al crear el ticket:", error);
@@ -31,4 +31,3 @@ class TicketDAO {
     }
 }
 
-export default new TicketDAO();
