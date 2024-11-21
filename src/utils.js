@@ -3,6 +3,8 @@ import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 import passport from 'passport';
 import nodemailer from 'nodemailer';
+import { config } from "./config/config.js";
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -59,17 +61,18 @@ export const error500 = (res,error)=>{
 }
 
 const transporter = nodemailer.createTransport({
-    service: 'gmail',  // o el servicio que estés usando
+    service: 'gmail',
+    port: 587,  
     auth: {
-        user: 'tucorreo@gmail.com',
-        pass: 'tu_contraseña'
+        user: 'szkopbaty@gmail.com',
+        pass: config.PASSWORD_MAIL
     }
 });
 
 
 const sendPurchaseEmail = async (toEmail, ticket) => {
     const mailOptions = {
-        from: 'tucorreo@gmail.com',
+        from: 'szkopbaty@gmail.com',
         to: toEmail,
         subject: 'Confirmación de Compra',
         text: `Gracias por tu compra. Aquí están los detalles de tu compra: 
