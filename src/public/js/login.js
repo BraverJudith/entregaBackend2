@@ -40,7 +40,7 @@ btn.addEventListener("click", async (e) => {
         let datos = await respuesta.json();
 
         if (respuesta.status === 200) {
-            location.href = "/api/products?page=1";
+            location.href = "/api/product?page=1";
         } else {
             div.textContent = datos.error;
             setTimeout(() => {

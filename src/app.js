@@ -42,7 +42,7 @@ app.set('views', path.join(__dirname,'/views'));
 app.use('/api/user', userRouter);
 app.use('/api/sessions', sessionsRouter);
 app.use("/api/carts", cartsRouter);
-app.use("/api/products", productsRouter);
+app.use("/api/product", productsRouter);
 app.use("/api/tickets", ticketRouter)
 app.use("/", viewsRouter);
 

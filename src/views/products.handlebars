@@ -13,8 +13,8 @@
                 <p>{{description}}</p>
                 <p>Precio: ${{price}}</p>
                 <p>Categoría: {{category}}</p>
-                <a class="button" href="/api/products/{{_id}}">Ver producto</a>
-                <form action="/api/carts/:cid/products/{{_id}}" method="post">
+                <a class="button" href="/api/product/{{_id}}">Ver producto</a>
+                <form action="/api/carts/:cid/product/{{_id}}" method="post">
                     <input type="hidden" name="quantity" value="1">
                     <button type="submit">Agregar al carrito</button>
                 </form>
