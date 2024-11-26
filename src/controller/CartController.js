@@ -4,6 +4,7 @@ import { ticketService } from "../services/Ticket.service.js";
 import { v4 as uuidv4 } from 'uuid';
 import { procesaErrores } from "../utils.js";
 import { viewsController } from "./ViewsController.js";
+import { UserDAO } from "../dao/UserDAO.js";
 //import { sendPurchaseEmail } from '../utils.js';
 
 export class CartController {
@@ -23,8 +24,11 @@ export class CartController {
         const user = req.user;
         try {
             const cart = await CartDAO.createCart();
-            user.cart_id = cart._id;
-            await user.save();
+            const updatedUser = await UserDAO.updateUser(
+                user._id, 
+                { cart_id: cart._id }, 
+                { new: true }
+            );
             res.json(cart);
         } catch (err) {
             console.error('Error al crear carrito:', err);
@@ -104,6 +108,11 @@ export class CartController {
                 return res.status(404).json({ success: false, error: 'Carrito no encontrado' });
             }
 
+            const product = await ProductDao.getProductsBy({ _id: productId });
+            if (!product || product.stock < quantity) {
+                return res.status(400).json({ success: false, error: 'No hay suficiente stock para este producto' });
+            }
+            
             const productIndex = cart.products.findIndex(p => p.product.toString() === productId);
             if (productIndex !== -1) {
                 cart.products[productIndex].quantity += quantity;
@@ -112,8 +121,11 @@ export class CartController {
             }
 
             await cart.save();
-
-            return res.redirect(`/carts/${cart._id}`);
+            res.status(200).json({ 
+                success: true, 
+                message: 'Producto agregado al carrito', 
+                cartUrl: `/carts/${cart._id}` 
+            });
             
         } catch (error) {
             console.error('Error adding products to Cart:', error);
@@ -221,7 +233,8 @@ export class CartController {
             //await sendPurchaseEmail(userEmail, ticket);
             await CartDAO.clearCart(cartId);
             const plainTicket = ticket.toObject();
-            res.render('purchaseConfirmation', { 
+            res.json({ 
+                success: true,
                 ticket: plainTicket, 
                 unavailableProducts: failedProducts, 
                 message: ticket 

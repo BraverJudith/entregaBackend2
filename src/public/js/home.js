@@ -29,8 +29,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 </form>`;
             listaProductos.appendChild(div);
         });
-    };
+        const addToCartButtons = document.querySelectorAll(".add-to-cart");
+        addToCartButtons.forEach(button => {
+        button.addEventListener("click", (e) => {
+            const productId = button.getAttribute("data-id");
+            addProductToCart(productId);
+        });
+    });
+};
 
+
+    function addProductToCart(productId, quantity = 1) {
+        fetch(`/cart/addProduct/${productId}`, {
+            method: 'POST',
+            body: JSON.stringify({ quantity }),
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = data.cartUrl;
+            } else {
+                alert(`Error: ${data.error}`);
+            }
+        })
+        .catch(error => {
+            console.error('Error al agregar producto al carrito:', error);
+            alert('Ocurrió un error inesperado');
+        });
+    }
+    
     const inputEmail = document.getElementById("email");
     const inputPass = document.getElementById("password");
     const btnSubmit = document.getElementById("btnSubmit");
@@ -71,34 +99,3 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
-    /*const btnAgregarProducto = document.getElementById("agregar");
-    if (btnAgregarProducto) {
-        btnAgregarProducto.addEventListener("click", () => {
-            agregarProducto();
-        });
-    } else {
-        console.error("Botón agregar no encontrado en el DOM");
-    }
-
-    const agregarProducto = () => {
-        const titulo = document.getElementById("titulo").value;
-        const descripcion = document.getElementById("descripcion").value;
-        const codigo = document.getElementById("codigo").value;
-        const precio = parseFloat(document.getElementById("precio").value);
-        const stock = parseInt(document.getElementById("stock").value);
-        const categoria = document.getElementById("categoria").value;
-        const status = document.getElementById("status").value === "true";
-        
-        const nuevoProducto = {
-            title: titulo,
-            description: descripcion,
-            code: codigo,
-            price: precio,
-            stock: stock,
-            category: categoria,
-        };
-
-        socket.emit("agregarProducto", nuevoProducto);
-        document.getElementById("formularioAgregarProducto").reset();
-    };*/

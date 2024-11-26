@@ -34,18 +34,21 @@ export class SessionsController {
     
     static async login(req, res) {
         try {
-            // Autenticación del usuario
             const { token, user } = await SessionsService.login(req, res);
     
-            // Obtener los productos
-            const products = await productService.getProducts();  
+            const products = await productService.getProducts();
     
-            // Establecer la cookie de autenticación
             res.cookie("sestok", token, { httpOnly: true, secure: true });
-            return res.redirect("/api/products?page=1");
+    
+            return res.status(200).json({
+                message: "Login exitoso",
+                token,
+                user,
+                products,
+            });
     
         } catch (error) {
-            res.status(401).json({ error: error.message });
+            return res.status(401).json({ error: error.message });
         }
     }
 
